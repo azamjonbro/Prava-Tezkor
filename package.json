@@ -12,9 +12,12 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
+    "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
+    "@reduxjs/toolkit": "^2.8.2",
+    "axios": "^1.10.0",
     "expo": "~53.0.17",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.7",
@@ -32,18 +35,22 @@
     "react-dom": "19.0.0",
     "react-native": "0.79.5",
     "react-native-gesture-handler": "~2.24.0",
+    "react-native-progress": "^5.0.1",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
+    "react-native-svg": "^15.11.2",
     "react-native-web": "~0.20.0",
-    "react-native-webview": "13.13.5"
+    "react-native-webview": "13.13.5",
+    "react-redux": "^9.2.0",
+    "toastify-react-native": "^7.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@types/react": "~19.0.10",
-    "typescript": "~5.8.3",
     "eslint": "^9.25.0",
-    "eslint-config-expo": "~9.2.0"
+    "eslint-config-expo": "~9.2.0",
+    "typescript": "~5.8.3"
   },
   "private": true
 }
