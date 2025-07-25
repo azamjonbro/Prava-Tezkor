@@ -126,7 +126,7 @@ const createStyles = (dark_mode: boolean) =>
     navigation_title: {
       fontSize: 24,
       fontWeight: 400,
-      color: COLOR.white,
+      color: dark_mode ? COLOR.white : COLOR.black1,
     },
     ads_cont: {
       width: "100%",

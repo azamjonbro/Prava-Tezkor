@@ -39,7 +39,7 @@ export default function TabScreen() {
 
   useEffect(() => {
     const getTicket = async () => {
-      Toast.info("Please wait")
+      Toast.info("Please wait");
       try {
         const token = await AsyncStorage.getItem("token");
         const { data, status } = await api.get("/api/ticket/findall", {
@@ -47,7 +47,7 @@ export default function TabScreen() {
         });
         const answers = await AsyncStorage.getItem("answers");
         const marathon = await AsyncStorage.getItem("marathon");
-        const savedTickets = await AsyncStorage.getItem('savedTickets')
+        const savedTickets = await AsyncStorage.getItem("savedTickets");
 
         if (status === 200) {
           dispatch(
@@ -59,7 +59,7 @@ export default function TabScreen() {
           );
           dispatch(
             setSavedTickets(savedTickets ? JSON.parse(savedTickets) : [])
-          )
+          );
         }
       } catch (err) {
         const error = err as Error;
@@ -92,6 +92,7 @@ export default function TabScreen() {
           tabBarIcon: ({ color }) => <HomeIcon color={color} />,
         }}
       />
+
       <Tabs.Screen
         name="template"
         options={{
