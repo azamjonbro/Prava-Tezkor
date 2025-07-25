@@ -45,6 +45,8 @@ export default function TabScreen() {
         const { data, status } = await api.get("/api/ticket/findall", {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log(data);
+        
         const answers = await AsyncStorage.getItem("answers");
         const marathon = await AsyncStorage.getItem("marathon");
         const savedTickets = await AsyncStorage.getItem('savedTickets')
