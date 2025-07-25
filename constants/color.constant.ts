@@ -20,4 +20,9 @@ export const COLOR = {
   gray4: "#7C7C7C",
   gray5: "#7D7D7D",
   black2: "#3A3A3C",
+
+  // dark mode colors
+
+  dark_color:"#383838",
+  dark_bg:"#E2DFDF",
 };

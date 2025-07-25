@@ -91,6 +91,7 @@ export default function Test() {
 
         <View style={styles.question_number_list}>
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={home_test.questions}
             horizontal
             keyExtractor={(_, index) => index.toString()}
@@ -198,12 +199,13 @@ const createStyles = (dark_mode: boolean) =>
     navigation_title: {
       fontSize: 24,
       fontWeight: 400,
-      color: COLOR.white,
+      color: dark_mode?COLOR.white:COLOR.dark,
     },
     container_header_right: {
       alignItems: "center",
       flexDirection: "row",
       gap: 8,
+      
     },
     container_header_timer: {
       width: 68,
@@ -219,23 +221,29 @@ const createStyles = (dark_mode: boolean) =>
       fontWeight: 400,
     },
     question_number_list: {
-      backgroundColor: COLOR.black1,
+      backgroundColor: dark_mode?COLOR.black1:COLOR.white,
       marginTop: 20,
-      padding: 7,
+      padding: 14,
       borderRadius: 10,
+  ...( !dark_mode && {
+    borderWidth: 1,
+    borderColor: COLOR.blue, 
+  })
     },
     question_number: {
-      width: 26,
-      height: 26,
+      width: 34,
+      height: 34,
       borderRadius: 10,
+
       alignItems: "center",
       justifyContent: "center",
     },
     question_number_text: {
-      fontSize: 14,
+      fontSize: 16,
     },
     question_number_default_color: {
       backgroundColor: COLOR.gray3,
+      color:"#fff"
     },
     question_number_red_color: {
       backgroundColor: COLOR.red,
@@ -248,13 +256,17 @@ const createStyles = (dark_mode: boolean) =>
     question_cont: {
       width: "100%",
       height: "70%",
-      backgroundColor: COLOR.black1,
+      backgroundColor: dark_mode?COLOR.black1:COLOR.white,
       marginTop: 16,
+      ...( !dark_mode && {
+    borderWidth: 1,
+    borderColor: COLOR.blue, 
+  }),
       padding: 8,
       borderRadius: 10,
     },
     question_cont_text: {
-      color: COLOR.white,
+      color: dark_mode?COLOR.white:COLOR.dark,
       fontSize: 14,
     },
     default_img: {
@@ -273,17 +285,17 @@ const createStyles = (dark_mode: boolean) =>
       height: 40,
       borderWidth: 1,
       marginTop: 10,
-      borderColor: COLOR.white,
+      borderColor: dark_mode?COLOR.white:COLOR.blue,
       borderRadius: 10,
       justifyContent: "center",
       paddingStart: 12,
     },
     answer_text: {
-      color: COLOR.white,
+      color: dark_mode?COLOR.white:COLOR.dark,
       fontSize: 16,
     },
     comment_text: {
-      color: COLOR.white,
+      color: dark_mode?COLOR.white:COLOR.dark,
       fontSize: 12,
       marginTop: 14,
     },

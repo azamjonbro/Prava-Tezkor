@@ -1,4 +1,4 @@
-export const BASE_URL = "https://tezkor-prava-uz-backend.onrender.com/";
+export const BASE_URL = "https://prava.safonon.uz";
 
 export const HomeLinksParams = {
   twenty_exam: { link: "20 exam", params: 20 },

@@ -164,7 +164,7 @@ export default function Index() {
               dispatch(setHomeTest({ limit: 10 }));
             }}
           >
-            <RandomIcon color="#fff" />
+            <RandomIcon color='white' />
             <Text style={style.department_text}>
               {MainLanguage["departments"]["random"]}
             </Text>
@@ -281,7 +281,7 @@ const createStyles = (dark_mode: boolean) =>
     },
     departments_wrapper: {
       width: "100%",
-      backgroundColor: COLOR.black1,
+      backgroundColor: dark_mode?COLOR.black2:COLOR.dark_bg,
       borderRadius: 10,
     },
     department: {
@@ -292,12 +292,12 @@ const createStyles = (dark_mode: boolean) =>
     },
     department_text: {
       fontSize: 14,
-      color: COLOR.white,
+      color: dark_mode?COLOR.white:COLOR.dark,
     },
     department_line: {
       width: "100%",
       height: 1,
-      backgroundColor: COLOR.white3,
+      backgroundColor: dark_mode?COLOR.white3:COLOR.dark_color,
     },
     modalBackground: {
       flex: 1,
