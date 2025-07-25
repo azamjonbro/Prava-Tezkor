@@ -89,7 +89,7 @@ export default function Test() {
             style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
             onPress={() => router.back()}
           >
-            <NavigationArrowLeftIcon color="#fff" />
+            <NavigationArrowLeftIcon color={dark_mode ? COLOR.white1 : COLOR.black1} />
             <Text style={styles.navigation_title}>
               {Mainlanguage["marathon_title"]} - 1
             </Text>

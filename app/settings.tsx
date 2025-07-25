@@ -60,7 +60,7 @@ export default function Settings() {
             style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
             onPress={() => navigation.goBack()}
           >
-            <NavigationArrowLeftIcon color="#fff" />
+            <NavigationArrowLeftIcon color={dark_mode ? COLOR.white1 : COLOR.black1} />
             <Text style={styles.navigation_title}>{MainLanguage["title"]}</Text>
           </TouchableOpacity>
           <TouchableOpacity>

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 export default function Layout() {
   const marathon = useMarathon();
+
   useEffect(() => {
     const saveAnswers = async () => {
       try {
@@ -13,10 +14,12 @@ export default function Layout() {
         console.error("AsyncStorage saqlashda xatolik:", e);
       }
     };
-    if (marathon.answers.length > 0) {
+
+    if (marathon?.answers?.length > 0) {
       saveAnswers();
     }
-  }, [marathon.answers]);
+  }, [marathon?.answers]);
+
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />

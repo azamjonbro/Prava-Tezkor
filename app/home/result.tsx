@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import { NavigationArrowLeftIcon } from "@/assets/svgs/icon";
 import { LanguageType } from "@/store/slices/language.slice";
 import { Languages } from "@/language";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 
 export default function Result() {
   const router = useRouter();
@@ -22,7 +23,8 @@ export default function Result() {
   const styles = createStyles(theme);
   const language = useLanguage() as LanguageType;
   const Mainlanguage = Languages[language]["template"];
-  const home_test = useHomeTest()
+  const home_test = useHomeTest();
+  const navigation = useNavigation();
 
   const totalQuestions = home_test.questions.length || 1;
   const correct = home_test?.used || 0;
@@ -40,11 +42,18 @@ export default function Result() {
           <View>
             <TouchableOpacity
               onPress={() => {
-                router.push({ pathname: "/marathon" });
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: "marathon" }], // MUST match the route name in your file structure (not URL)
+                  })
+                );
               }}
               style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
             >
-              <NavigationArrowLeftIcon color="#fff" />
+              <NavigationArrowLeftIcon
+                color={theme ? COLOR.white1 : COLOR.black1}
+              />
               <Text style={styles.navigation_title}>
                 {Mainlanguage["result_title"]}
               </Text>
@@ -111,12 +120,12 @@ const createStyles = (dark_mode: boolean) =>
     navigation_title: {
       fontSize: 24,
       fontWeight: 400,
-      color: COLOR.white,
+      color: dark_mode ? COLOR.white : COLOR.black1,
     },
     ads_cont: {
       width: "100%",
       height: "30%",
-      backgroundColor: COLOR.white,
+      backgroundColor: dark_mode ? COLOR.black1 : COLOR.white2,
       borderRadius: 10,
       alignItems: "center",
       justifyContent: "center",
@@ -127,7 +136,7 @@ const createStyles = (dark_mode: boolean) =>
     },
     result_cont: {
       width: "100%",
-      backgroundColor: COLOR.black1,
+      backgroundColor: dark_mode ? COLOR.black1 : COLOR.white2,
       padding: 25,
       borderRadius: 10,
       marginTop: 37,
@@ -136,7 +145,7 @@ const createStyles = (dark_mode: boolean) =>
       fontSize: 36,
       fontWeight: 700,
       textAlign: "center",
-      color: COLOR.white,
+      color: dark_mode ? COLOR.white : COLOR.black1,
     },
     result_footer: {
       flexDirection: "row",
@@ -157,7 +166,7 @@ const createStyles = (dark_mode: boolean) =>
     },
     result_number_text: {
       fontSize: 14,
-      color: COLOR.white,
+      color: dark_mode ? COLOR.white : COLOR.black1,
       fontWeight: 500,
     },
     next_button: {
@@ -187,6 +196,6 @@ const createStyles = (dark_mode: boolean) =>
     bar_text: {
       fontSize: 24,
       fontWeight: "bold",
-      color: "white",
+      color: dark_mode ? COLOR.white : COLOR.black1,
     },
   });

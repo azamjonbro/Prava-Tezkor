@@ -116,7 +116,7 @@ export default function Index() {
               dispatch(setHomeTest({ limit: 20 }));
             }}
           >
-            <ExamIcon color="#fff" />
+            <ExamIcon color={dark_mode ? COLOR.white: COLOR.black1} />
             <Text style={style.department_text}>
               {MainLanguage["departments"]["exam20"]}
             </Text>
@@ -135,7 +135,7 @@ export default function Index() {
               dispatch(setHomeTest({ limit: 10 }));
             }}
           >
-            <TemplateIcon color="#fff" />
+            <TemplateIcon color={dark_mode ? COLOR.white: COLOR.black1} />
             <Text style={style.department_text}>
               {MainLanguage["departments"]["exam10"]}
             </Text>
@@ -145,7 +145,7 @@ export default function Index() {
             style={style.department}
             onPress={() => route.push({ pathname: "/marathon" })}
           >
-            <Marathon2Icon color="#fff" />
+            <Marathon2Icon color={dark_mode ? COLOR.white: COLOR.black1} />
             <Text style={style.department_text}>
               {MainLanguage["departments"]["marathon"]}
             </Text>
@@ -164,14 +164,14 @@ export default function Index() {
               dispatch(setHomeTest({ limit: 10 }));
             }}
           >
-            <RandomIcon color='white' />
+            <RandomIcon color={dark_mode ? COLOR.white: COLOR.black1} />
             <Text style={style.department_text}>
               {MainLanguage["departments"]["random"]}
             </Text>
           </TouchableOpacity>
           <View style={style.department_line}></View>
           <View style={style.department}>
-            <SaveIcon color="#fff" />
+            <SaveIcon color={dark_mode ? COLOR.white: COLOR.black1} />
             <Text style={style.department_text}>
               {MainLanguage["departments"]["saved"]}
             </Text>
@@ -270,7 +270,7 @@ const createStyles = (dark_mode: boolean) =>
     banner_text: {
       fontSize: 20,
       fontWeight: "700",
-      color: COLOR.dark,
+      color: dark_mode?COLOR.white: COLOR.black1,
     },
 
     departments_title: {
@@ -303,7 +303,7 @@ const createStyles = (dark_mode: boolean) =>
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: COLOR.white2,
+      backgroundColor: dark_mode?COLOR.black1: COLOR.white2,
     },
     modalContent: {
       width: 300,
