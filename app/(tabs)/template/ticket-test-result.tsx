@@ -127,6 +127,8 @@ const createStyles = (dark_mode: boolean) =>
       fontSize: 24,
       fontWeight: 400,
       color: dark_mode ? COLOR.white : COLOR.black1,
+      paddingTop:40,
+
     },
     ads_cont: {
       width: "100%",

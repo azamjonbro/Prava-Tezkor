@@ -1,7 +1,6 @@
 import { createGlobalStyles } from "@/assets/styles/global.style";
 import {
   FolderCrossIcon,
-  InfoIcon,
   NavigationArrowLeftIcon,
   SaveIcon,
   ShareIcon,
@@ -134,9 +133,6 @@ export default function Offer() {
               color={dark_mode ? "#fff" : COLOR.black1}
             />
             <Text style={styles.navigation_title}>{Mainlanguage["title"]}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <InfoIcon color="#B0B0B0" />
           </TouchableOpacity>
         </View>
         <View
@@ -277,6 +273,7 @@ const createStyles = (dark_mode: boolean) =>
       alignItems: "center",
       justifyContent: "space-between",
       flexDirection: "row",
+      paddingTop:40,
     },
     navigation_title: {
       fontSize: 24,

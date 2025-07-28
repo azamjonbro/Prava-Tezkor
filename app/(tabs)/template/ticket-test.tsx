@@ -285,6 +285,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     flexDirection: "row",
+    paddingTop:40,
   },
   navigation_title: {
     fontSize: 24,

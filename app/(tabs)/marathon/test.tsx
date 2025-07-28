@@ -40,7 +40,7 @@ export default function Test() {
 
   const global_styles = createGlobalStyles(dark_mode);
   const styles = createStyles(dark_mode);
-  const question = marathons.questions[currentQuestion];
+  const question = marathons?.questions[currentQuestion];
   const Mainlanguage = Languages[language]["marathon"];
   const dispatch = useDispatch();
 
