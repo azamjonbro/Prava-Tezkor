@@ -95,6 +95,25 @@ export default function ticketTest() {
     () => answers.find((i) => i.ticketId == +id),
     [answers]
   );
+  const normalizeUrl = (base: string, path: string) => {
+    // Agar path boshida ./ yoki / bo‘lsa tozalaymiz
+    const cleanPath = path.replace(/^\.?\//, "");
+    return `${base.replace(/\/$/, "")}/${cleanPath}`;
+  };
+
+  useEffect(() => {
+    if (question) {
+      console.log("🖼 Question object:", question);
+      console.log("🖼 question.imgUrl:", question?.imgUrl);
+      console.log(
+        "🖼 Full image URL:",
+        question?.imgUrl
+          ? BASE_URL + question.imgUrl.slice(2)
+          : "Default ishlatiladi"
+      );
+    }
+  }, [currentQuestion]);
+
   return (
     <ScrollView
       style={{ backgroundColor: dark_mode ? COLOR.dark : COLOR.white }}
@@ -219,10 +238,14 @@ export default function ticketTest() {
           </Text>
           {question.imgUrl ? (
             <Image
-              source={{ uri: BASE_URL + question.imgUrl.slice(4) }}
-              height={180}
+              source={{
+                uri: question?.imgUrl
+                  ? normalizeUrl(BASE_URL, question.imgUrl)
+                  : normalizeUrl(BASE_URL, "images/default.png"),
+              }}
               style={{
                 marginTop: 15,
+                height: 180,
                 backgroundColor: "red",
                 width: "100%",
                 borderRadius: 10,
@@ -231,6 +254,7 @@ export default function ticketTest() {
           ) : (
             <View style={styles.default_img}></View>
           )}
+
           <View>
             {question.answers.map((item, index) => {
               return (
@@ -285,7 +309,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     flexDirection: "row",
-    paddingTop:40,
+    paddingTop: 40,
   },
   navigation_title: {
     fontSize: 24,
