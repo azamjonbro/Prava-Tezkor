@@ -2,7 +2,6 @@ import { createGlobalStyles } from "@/assets/styles/global.style";
 import {
     ArrowSquareIcon,
     EyeIcon,
-    InfoIcon,
     InfoIcon2,
     InstagramIcon,
     LinkIcon,
@@ -63,26 +62,12 @@ export default function Settings() {
             <NavigationArrowLeftIcon color="#fff" />
             <Text style={styles.navigation_title}>{MainLanguage["title"]}</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <InfoIcon color="#B0B0B0" />
-          </TouchableOpacity>
         </View>
         <View style={{ ...styles.line, marginTop: 20 }}></View>
         <Text style={styles.section_title}>
           {MainLanguage["sections"]["others"]}
         </Text>
         <View style={styles.section}>
-          <View style={styles.section_child}>
-            <View style={styles.section_child_left}>
-              <View style={styles.section_child_icon}>
-                <EyeIcon color={COLOR.green2} />
-              </View>
-              <Text style={styles.section_child_text}>
-                {MainLanguage["options"]["extract_colors"]}
-              </Text>
-            </View>
-          </View>
-
           <View style={styles.line}></View>
           <View style={styles.section_child}>
             <View style={styles.section_child_left}>
@@ -376,6 +361,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingLeft: 12,
     paddingRight: 12,
+    paddingTop:40
   },
   navigation_title: {
     fontSize: 24,

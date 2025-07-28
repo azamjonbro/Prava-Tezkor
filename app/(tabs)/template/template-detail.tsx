@@ -1,5 +1,5 @@
 import { createGlobalStyles } from "@/assets/styles/global.style";
-import { InfoIcon, NavigationArrowLeftIcon } from "@/assets/svgs/icon";
+import {  NavigationArrowLeftIcon } from "@/assets/svgs/icon";
 import { COLOR } from "@/constants/color.constant";
 import { Languages } from "@/language";
 import {
@@ -53,9 +53,6 @@ export default function templateDetail() {
         >
           <NavigationArrowLeftIcon color="#fff" />
           <Text style={styles.navigation_title}>{Mainlanguage["title"]}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <InfoIcon color="#B0B0B0" />
         </TouchableOpacity>
       </View>
       <View style={styles.statistic_cont}>
@@ -131,6 +128,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     flexDirection: "row",
+    paddingTop:40,
+
   },
   navigation_title: {
     fontSize: 24,

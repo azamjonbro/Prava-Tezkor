@@ -1,6 +1,6 @@
 import { createGlobalStyles } from "@/assets/styles/global.style";
-import { InfoIcon, NavigationArrowLeftIcon } from "@/assets/svgs/icon";
 import { COLOR } from "@/constants/color.constant";
+import {NavigationArrowLeftIcon} from "@/assets/svgs/icon"
 import { Languages } from "@/language";
 import {
   useLanguage,
@@ -26,7 +26,7 @@ export default function Marathon() {
   const dark_mode = useThemeMode();
   const language = useLanguage();
   const marathon = useMarathon()
-  const answers = marathon.answers
+  const answers = marathon?.answers
   const dispatch = useDispatch();
 
   const global_styles = createGlobalStyles(dark_mode);
@@ -34,9 +34,9 @@ export default function Marathon() {
 
   const MainLanguage = Languages[language as LanguageType]["marathon"];
 
-  const totalQuestions = marathon.questions.length || 20
+  const totalQuestions = marathon?.questions?.length || 20
   const used = marathon.used
-  const rejected = marathon.rejected
+  const rejected = marathon?.rejected
   const score = Math.round((used / totalQuestions) * 100);
   return (
     <ScrollView style={{ paddingBottom: 15 }}>
@@ -48,9 +48,6 @@ export default function Marathon() {
           >
             <NavigationArrowLeftIcon color="#fff" />
             <Text style={styles.navigation_title}>Marafon</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <InfoIcon color="#B0B0B0" />
           </TouchableOpacity>
         </View>
         <View style={styles.statistic_cont}>

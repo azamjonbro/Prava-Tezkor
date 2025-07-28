@@ -1,5 +1,5 @@
 import { createGlobalStyles } from "@/assets/styles/global.style";
-import { InfoIcon, NavigationArrowLeftIcon } from "@/assets/svgs/icon";
+import {  NavigationArrowLeftIcon } from "@/assets/svgs/icon";
 import { COLOR } from "@/constants/color.constant";
 import { Languages } from "@/language";
 import {
@@ -48,9 +48,6 @@ export default function Template() {
               color={dark_mode ? "#fff" : COLOR.black1}
             />
             <Text style={styles.navigation_title}>{MainLanguage["title"]}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <InfoIcon color="#B0B0B0" />
           </TouchableOpacity>
         </View>
 
@@ -170,6 +167,7 @@ const createStyles = (dark_mode: boolean) =>
       alignItems: "center",
       justifyContent: "space-between",
       flexDirection: "row",
+      paddingTop:40,
     },
     navigation_title: {
       fontSize: 24,

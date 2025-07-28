@@ -232,6 +232,7 @@ const createStyles = (dark_mode: boolean) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
+      paddingTop:40
     },
     title: {
       color: dark_mode ? COLOR.white : COLOR.black1,
