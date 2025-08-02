@@ -39,6 +39,7 @@ export default function TabScreen() {
     };
     setLang();
   }, []);
+
   const getTicket = async () => {
     Toast.info("Please wait");
     try {
@@ -65,6 +66,15 @@ export default function TabScreen() {
       const error = err as Error;
       console.error(error);
       await AsyncStorage.clear();
+      const res = await SignUp();
+      let token = await AsyncStorage.getItem("token");
+      if (res?.status === 201) {
+        token = res.data.token;
+        await AsyncStorage.setItem("token", token ? token : "");
+        Toast.success("Signup successful");
+        getTicket()
+      }
+
       Toast.error(error.message);
     }
   };
@@ -90,6 +100,13 @@ export default function TabScreen() {
         }
       } catch (error) {
         await AsyncStorage.clear();
+        const res = await SignUp();
+        let token = await AsyncStorage.getItem("token");
+        if (res?.status === 201) {
+          token = res.data.token;
+          await AsyncStorage.setItem("token", token ? token : "");
+          Toast.success("Signup successful");
+        }
         if (axios.isAxiosError(error)) {
           Toast.error(error.response?.data?.message || error.message);
         } else {
@@ -111,7 +128,7 @@ export default function TabScreen() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: dark_mode ? COLOR.dark2 : "white",
-          display: !["/template/ticket-test"].includes(pathname)
+          display: !["/template/ticket-test",'/template/template-detail'].includes(pathname)
             ? "flex"
             : "none",
         },

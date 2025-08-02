@@ -9,10 +9,12 @@ export const createGlobalStyles = (dark_mode: boolean) => {
       height: Dimensions.get("window").height,
       paddingLeft: 12,
       paddingRight: 12,
+      paddingTop:20
     },
     container2: {
       backgroundColor: dark_mode ? COLOR.dark : COLOR.white,
       flex: 1,
+      paddingTop:20
     },
   });
 };

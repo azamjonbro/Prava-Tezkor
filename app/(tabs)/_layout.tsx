@@ -7,7 +7,7 @@ import ToastManager, { Toast } from "toastify-react-native";
 export default function RootLayout() {
   return (
     <>
-      <SafeAreaView style={{flex:1}}>
+      <SafeAreaView style={{flex:1}}  edges={['top']}>
         <Provider store={store}>
           <TabScreen />
         </Provider>

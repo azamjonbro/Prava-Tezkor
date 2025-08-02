@@ -221,7 +221,6 @@ export default function ticketTest() {
                   <Text
                     style={{
                       ...styles.question_number_text,
-                      color: COLOR.black1,
                     }}
                   >
                     {index + 1}

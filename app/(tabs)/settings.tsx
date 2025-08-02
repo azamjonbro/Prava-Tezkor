@@ -77,9 +77,9 @@ export default function Settings() {
             <NavigationArrowLeftIcon color="#fff" />
             <Text style={styles.navigation_title}>{MainLanguage["title"]}</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <InfoIcon color="#B0B0B0" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View style={{ ...styles.line, marginTop: 20 }}></View>
         <Text style={styles.section_title}>

@@ -71,45 +71,49 @@ export default function Test() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleAnswerPress = (index: number) => {
+  useEffect(() => {
+    if (marathon?.rejected === 5) {
+      setIsErrors(true);
+    }
+  }, [marathon.answers]);
+
+  const normalizeUrl = (base: string, path: string) => {
+    const cleanPath = path.replace(/^\.?\//, "");
+    return `${base.replace(/\/$/, "")}/${cleanPath}`;
+  };
+
+  const handleNext = (index: number) => {
     const alreadyAnswered = marathon.answers.find(
       (i) => i.questionId === currentQuestion
     );
 
     if (alreadyAnswered) return;
 
-    const nextQuestionIndex = currentQuestion + 1;
     dispatch(
       answerTheQuestionMarathon({
         marathonId: marathon.id,
-        answer: { correct_answer: index, questionId: currentQuestion },
+        answer: {
+          correct_answer: index + 1,
+          questionId: currentQuestion,
+        },
       })
     );
 
     setDisabledInput(true);
     setShowCorrectAnswer(true);
+    const nextQuestionIndex = currentQuestion + 1;
 
     setTimeout(() => {
       if (nextQuestionIndex >= marathon.questions.length) {
         router.push({ pathname: "/marathon/result" });
-      } else {
+      }
+      else {
         setCurrentQuestion(nextQuestionIndex);
       }
+
       setDisabledInput(false);
       setShowCorrectAnswer(false);
     }, 3000);
-  };
-
-  useEffect(() => {
-    if (marathon?.rejected === 5) {
-      setIsErrors(true);
-    }
-  }, [marathon?.rejected]);
-  console.log(question);
-
-  const normalizeUrl = (base: string, path: string) => {
-    const cleanPath = path.replace(/^\.?\//, "");
-    return `${base.replace(/\/$/, "")}/${cleanPath}`;
   };
 
   return (
@@ -128,7 +132,7 @@ export default function Test() {
           >
             <NavigationArrowLeftIcon color="#fff" />
             <Text style={styles.navigation_title}>
-              {Mainlanguage["marathon_title"]} - 1
+              {Mainlanguage["marathon_title"]} - {marathons.length}
             </Text>
           </TouchableOpacity>
           <View style={styles.timer}>
@@ -162,7 +166,6 @@ export default function Test() {
                   <Text
                     style={{
                       ...styles.question_number_text,
-                      color: COLOR.black1,
                     }}
                   >
                     {index + 1}
@@ -204,7 +207,6 @@ export default function Test() {
 
               const showCorrect = showCorrectAnswer && isCorrect;
               const showIncorrect = isSelected && !isCorrect;
-
               return (
                 <TouchableOpacity
                   key={index}
@@ -215,7 +217,7 @@ export default function Test() {
                     isSelected && isCorrect ? styles.green_answer_text : {},
                   ]}
                   disabled={disabledInput}
-                  onPress={() => handleAnswerPress(index)}
+                  onPress={() => handleNext(index)}
                 >
                   <Text style={styles.answer_text}>
                     {item[language as LanguageType]}

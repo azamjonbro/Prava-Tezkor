@@ -47,7 +47,7 @@ export interface TicketAnswersI {
 // Marathon interface
 
 export interface MarathonQuestionI {
-  id: number;
+  // id: number;
   imgUrl: string;
   questions: {
     lotin: string;
@@ -241,13 +241,19 @@ const TicketSlice = createSlice({
         }),
       };
     },
+    deleteticketTest: (state,{payload}:PayloadAction<{ticketId:number}>)=>{
+      state.answers = state.answers.filter((i)=>{
+        return i.ticketId !== payload.ticketId
+      })
+      return state
+    },
     addMarathonTest: (state, _) => {
-      let n = 0;
+      // let n = 0;
       const shuffleArray = state.tickets.flatMap(() => {
         const randomNumber = Math.floor(Math.random() * state.tickets.length);
         return state.tickets[randomNumber].children.map((child) => ({
           ...child,
-          id: ++n,
+          // id: ++n,
         }));
       });
 
@@ -275,7 +281,7 @@ const TicketSlice = createSlice({
 
       const { questionId, correct_answer } = answer;
 
-      const question = marathon.questions.find((q) => q.id === questionId);
+      const question = marathon.questions[questionId]
       if (!question) {
         console.warn("Question not found in marathon");
         return state;

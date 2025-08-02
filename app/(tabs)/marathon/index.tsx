@@ -1,6 +1,6 @@
 import { createGlobalStyles } from "@/assets/styles/global.style";
 import { COLOR } from "@/constants/color.constant";
-import {NavigationArrowLeftIcon} from "@/assets/svgs/icon"
+import { NavigationArrowLeftIcon } from "@/assets/svgs/icon";
 import { Languages } from "@/language";
 import {
   useLanguage,
@@ -25,76 +25,78 @@ export default function Marathon() {
   const router = useRouter();
   const dark_mode = useThemeMode();
   const language = useLanguage();
-  const marathon = useMarathon()
-  const answers = marathon.reduce((a,b)=>a+b.answers.length,0)
+  const marathon = useMarathon();
+  const answers = marathon.reduce((a, b) => a + b.answers.length, 0);
   const dispatch = useDispatch();
-  const tickets = useTickets()
+  const tickets = useTickets();
 
   const global_styles = createGlobalStyles(dark_mode);
   const styles = createStyles(dark_mode);
 
   const MainLanguage = Languages[language as LanguageType]["marathon"];
 
-  const totalQuestions = tickets?.length || 20
-  const used = marathon.reduce((a,b)=>a + b.used,0) || 0
-  const rejected = marathon.reduce((a,b)=>a + b.rejected,0) || 0
+  const totalQuestions = tickets?.length || 20;
+  const used = marathon.reduce((a, b) => a + b.used, 0) || 0;
+  const rejected = marathon.reduce((a, b) => a + b.rejected, 0) || 0;
   const score = Math.round((used / totalQuestions) * 100);
   return (
     <ScrollView style={{ paddingBottom: 15 }}>
-      <View style={global_styles.container}>
-        <View style={styles.container_header}>
-          <TouchableOpacity
-            style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
-            onPress={() => router.back()}
-          >
-            <NavigationArrowLeftIcon color="#fff" />
-            <Text style={styles.navigation_title}>Marafon</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.statistic_cont}>
-          <View>
-            <Text style={styles.statistic_percent_text}>{score}%</Text>
-            <Text style={styles.statistic_mini_title}>
-              {MainLanguage["my_result"]}
-            </Text>
+      <View style={[global_styles.container, styles.container]}>
+        <View style={styles.body}>
+          <View style={styles.container_header}>
+            <TouchableOpacity
+              style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
+              onPress={() => router.back()}
+            >
+              <NavigationArrowLeftIcon color="#fff" />
+              <Text style={styles.navigation_title}>Marafon</Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.statistic_results}>
+          <View style={styles.statistic_cont}>
             <View>
-              <Text style={styles.statistic_result_text}>
-                <Text style={styles.statistic_result_text_true}>{used}</Text> /{" "}
-                {totalQuestions}
-              </Text>
+              <Text style={styles.statistic_percent_text}>{score}%</Text>
               <Text style={styles.statistic_mini_title}>
-                {MainLanguage["true_answers"]}
+                {MainLanguage["my_result"]}
               </Text>
             </View>
-            <View>
-              <Text style={styles.statistic_result_text}>
-                <Text style={styles.statistic_result_text_false}>
-                  {rejected}
-                </Text>{" "}
-                / {totalQuestions}
-              </Text>
-              <Text style={styles.statistic_mini_title}>
-                {MainLanguage["false_answers"]}
-              </Text>
+            <View style={styles.statistic_results}>
+              <View>
+                <Text style={styles.statistic_result_text}>
+                  <Text style={styles.statistic_result_text_true}>{used}</Text>{" "}
+                  / {totalQuestions}
+                </Text>
+                <Text style={styles.statistic_mini_title}>
+                  {MainLanguage["true_answers"]}
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.statistic_result_text}>
+                  <Text style={styles.statistic_result_text_false}>
+                    {rejected}
+                  </Text>{" "}
+                  / {totalQuestions}
+                </Text>
+                <Text style={styles.statistic_mini_title}>
+                  {MainLanguage["false_answers"]}
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
-        <View style={styles.description_cont}>
+          {/* <View style={styles.description_cont}>
           <Text style={styles.description_text}>
             {MainLanguage["description"]}
           </Text>
+        </View> */}
+          <TouchableOpacity
+            style={styles.start_btn}
+            onPress={() => {
+              router.push({ pathname: "/marathon/test" });
+              dispatch(addMarathonTest({}));
+            }}
+          >
+            <Text style={styles.start_text}>{MainLanguage["start"]}</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.start_btn}
-          onPress={() => {
-            router.push({ pathname: "/marathon/test" });
-            dispatch(addMarathonTest({}));
-          }}
-        >
-          <Text style={styles.start_text}>{MainLanguage["start"]}</Text>
-        </TouchableOpacity>
         <View style={styles.ads_container}>
           <Text style={styles.ads_text}>ADS</Text>
         </View>
@@ -105,9 +107,15 @@ export default function Marathon() {
 
 const createStyles = (dark_mode: boolean) =>
   StyleSheet.create({
-    container_header: {
-      display: "flex",
+    container: {
       alignItems: "center",
+      justifyContent: "space-between",
+      flexDirection: "column",
+    },
+    body:{
+      width:"100%"
+    },
+    container_header: {
       justifyContent: "space-between",
       flexDirection: "row",
     },

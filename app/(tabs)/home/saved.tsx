@@ -83,8 +83,8 @@ const createStyles = (dark_mode: boolean) =>
       fontWeight: 400,
     },
     question_see: {
-      width: 60,
-      height: 21,
+      width: 80,
+      height: 32,
       borderRadius: 5,
       alignItems: "center",
       justifyContent: "center",

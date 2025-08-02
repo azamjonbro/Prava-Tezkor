@@ -36,6 +36,7 @@ export default function Template() {
   const rejected = answers.reduce((acc, item) => acc + item.rejected, 0);
   const score = Math.round((used / totalQuestions) * 100);
   const MainLanguage = Languages[language as LanguageType]["template"];
+  
   return (
     <ScrollView>
       <View style={global_styles.container}>
@@ -93,7 +94,7 @@ export default function Template() {
             onPress={() =>
               router.push({
                 pathname: "/template/template-detail",
-                params: { from: 0, to: 9 },
+                params: { from: 0, to: 10 },
               })
             }
           >
@@ -106,7 +107,7 @@ export default function Template() {
             onPress={() =>
               router.push({
                 pathname: "/template/template-detail",
-                params: { from: 9, to: 19 },
+                params: { from: 10, to: 30 },
               })
             }
           >
@@ -121,7 +122,7 @@ export default function Template() {
             onPress={() =>
               router.push({
                 pathname: "/template/template-detail",
-                params: { from: 19, to: 299 },
+                params: { from: 30, to: 330 },
               })
             }
           >
@@ -134,7 +135,7 @@ export default function Template() {
             onPress={() =>
               router.push({
                 pathname: "/template/template-detail",
-                params: { from: 299, to: 500 },
+                params: { from: 330 },
               })
             }
           >
@@ -167,7 +168,6 @@ const createStyles = (dark_mode: boolean) =>
       alignItems: "center",
       justifyContent: "space-between",
       flexDirection: "row",
-      paddingTop:40,
     },
     navigation_title: {
       fontSize: 24,

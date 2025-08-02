@@ -13,10 +13,10 @@ export default function Layout() {
         console.error("AsyncStorage saqlashda xatolik:", e);
       }
     };
-    if (marathon?.length > 0 || 0) {
+    if (marathon?.length > 0) {
       saveAnswers();
     }
-  }, [marathon.length]);
+  }, [marathon]);
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />

@@ -151,7 +151,6 @@ export default function Test() {
                   <Text
                     style={{
                       ...styles.question_number_text,
-                      color: COLOR.black1,
                     }}
                   >
                     {index + 1}
