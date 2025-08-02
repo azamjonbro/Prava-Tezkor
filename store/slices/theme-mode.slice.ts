@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const ThemeModeSlice = createSlice({
     name:"ThemeModeSlice",
-    initialState: false,
+    initialState: true,
     reducers:{
         setTheme: (state,{payload})=>{
             state = payload

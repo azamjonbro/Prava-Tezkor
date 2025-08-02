@@ -8,15 +8,15 @@ export default function Layout() {
   useEffect(() => {
     const saveAnswers = async () => {
       try {
-        await AsyncStorage.setItem("marathon", JSON.stringify(marathon || {}));
+        await AsyncStorage.setItem("marathon", JSON.stringify(marathon || []));
       } catch (e) {
         console.error("AsyncStorage saqlashda xatolik:", e);
       }
     };
-    if (marathon.answers.length > 0) {
+    if (marathon?.length > 0 || 0) {
       saveAnswers();
     }
-  }, [marathon.answers]);
+  }, [marathon.length]);
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />

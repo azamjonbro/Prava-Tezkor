@@ -57,17 +57,15 @@ export default function ticketTestResult() {
         }}
       >
         <View>
-          <View>
             <TouchableOpacity
               onPress={() => {
-                router.push({ pathname: "/marathon" });
+                router.push({ pathname: '/(tabs)/template' });
               }}
-              style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
+              style={{ alignItems:"center", flexDirection: "row", gap: 6 }}
             >
               <NavigationArrowLeftIcon color="#fff" />
               <Text style={styles.navigation_title}>{Mainlanguage['result_title']}</Text>
             </TouchableOpacity>
-          </View>
 
           <View style={styles.result_cont}>
             <View style={styles.bar_container}>
@@ -127,8 +125,6 @@ const createStyles = (dark_mode: boolean) =>
       fontSize: 24,
       fontWeight: 400,
       color: dark_mode ? COLOR.white : COLOR.black1,
-      paddingTop:40,
-
     },
     ads_cont: {
       width: "100%",

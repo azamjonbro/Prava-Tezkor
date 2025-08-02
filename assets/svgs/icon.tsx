@@ -778,12 +778,7 @@ export const FolderCrossIcon: FC<IconI> = ({ color }) => (
 );
 
 export const ShareIcon: FC<IconI> = ({ color }) => (
-  <Svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-  >
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <Path
       d="M16.96 6.17001C18.96 7.56001 20.34 9.77001 20.62 12.32"
       stroke={color}
@@ -821,6 +816,177 @@ export const ShareIcon: FC<IconI> = ({ color }) => (
     />
     <Path
       d="M19.1699 19.92C20.7052 19.92 21.9499 18.6753 21.9499 17.14C21.9499 15.6046 20.7052 14.36 19.1699 14.36C17.6345 14.36 16.3899 15.6046 16.3899 17.14C16.3899 18.6753 17.6345 19.92 19.1699 19.92Z"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);
+
+export const AllQuestionIcon: FC<IconI> = ({ color }) => (
+  <Svg width="25" height="24" viewBox="0 0 25 24" fill="none">
+    <Path
+      d="M22.8753 6.76001L19.5053 20.29C19.2653 21.3 18.3653 22 17.3253 22H4.18532C2.67532 22 1.59534 20.5199 2.04534 19.0699L6.25533 5.55005C6.54533 4.61005 7.41534 3.95996 8.39534 3.95996H20.6953C21.6453 3.95996 22.4353 4.53997 22.7653 5.33997C22.9553 5.76997 22.9953 6.26001 22.8753 6.76001Z"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+    />
+    <Path
+      d="M16.9453 22H21.7253C23.0153 22 24.0253 20.91 23.9353 19.62L22.9453 6"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M10.6252 6.38L11.6653 2.06006"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M17.3253 6.39001L18.2653 2.05005"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M8.64526 12H16.6453"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M7.64526 16H15.6453"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);
+
+export const FinesIcon: FC<IconI> = ({ color }) => (
+  <Svg width="25" height="24" viewBox="0 0 25 24" fill="none">
+    <Path
+      d="M8.78528 20.02L10.3753 21.21C11.7853 22.27 14.1053 22.27 15.5153 21.21L19.8153 18C20.7653 17.29 21.5453 15.74 21.5453 14.56V7.12"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M19.9253 4.34006C19.7753 4.25006 19.6153 4.17006 19.4553 4.10006L14.4653 2.23006C13.6353 1.92006 12.2753 1.92006 11.4453 2.23006L6.44535 4.11006C5.29535 4.54006 4.35535 5.90006 4.35535 7.12006V14.5501C4.35535 15.7301 5.13535 17.2801 6.08535 17.9901L6.28535 18.1401"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M22.9453 2L2.94531 22"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);
+
+export const BonusIcon: FC<IconI> = ({ color }) => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M8.67188 14.3298C8.67188 15.6198 9.66188 16.6598 10.8919 16.6598H13.4019C14.4719 16.6598 15.3419 15.7498 15.3419 14.6298C15.3419 13.4098 14.8119 12.9798 14.0219 12.6998L9.99187 11.2998C9.20187 11.0198 8.67188 10.5898 8.67188 9.36984C8.67188 8.24984 9.54187 7.33984 10.6119 7.33984H13.1219C14.3519 7.33984 15.3419 8.37984 15.3419 9.66984"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M12 6V18"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);
+
+export const CartIcon: FC<IconI> = ({ color }) => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M2 2H3.74001C4.82001 2 5.67 2.93 5.58 4L4.75 13.96C4.61 15.59 5.89999 16.99 7.53999 16.99H18.19C19.63 16.99 20.89 15.81 21 14.38L21.54 6.88C21.66 5.22 20.4 3.87 18.73 3.87H5.82001"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M16.25 22C16.9404 22 17.5 21.4404 17.5 20.75C17.5 20.0596 16.9404 19.5 16.25 19.5C15.5596 19.5 15 20.0596 15 20.75C15 21.4404 15.5596 22 16.25 22Z"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M8.25 22C8.94036 22 9.5 21.4404 9.5 20.75C9.5 20.0596 8.94036 19.5 8.25 19.5C7.55964 19.5 7 20.0596 7 20.75C7 21.4404 7.55964 22 8.25 22Z"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M9 8H21"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);
+
+export const Bonus2Icon: FC<IconI> = ({ color }) => (
+  <Svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <Path
+      d="M8.67188 14.3298C8.67188 15.6198 9.66188 16.6598 10.8919 16.6598H13.4019C14.4719 16.6598 15.3419 15.7498 15.3419 14.6298C15.3419 13.4098 14.8119 12.9798 14.0219 12.6998L9.99187 11.2998C9.20187 11.0198 8.67188 10.5898 8.67188 9.36984C8.67188 8.24984 9.54187 7.33984 10.6119 7.33984H13.1219C14.3519 7.33984 15.3419 8.37984 15.3419 9.66984"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M12 6V18"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M15 22H9C4 22 2 20 2 15V9C2 4 4 2 9 2H15C20 2 22 4 22 9V15C22 20 20 22 15 22Z"
       stroke={color}
       stroke-width="1.5"
       stroke-linecap="round"

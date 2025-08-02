@@ -40,7 +40,7 @@ export default function Result() {
           <View>
             <TouchableOpacity
               onPress={() => {
-                router.push({ pathname: "/marathon" });
+                router.push({ pathname: "/(tabs)/home" });
               }}
               style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
             >

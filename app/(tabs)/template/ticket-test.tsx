@@ -10,12 +10,16 @@ import { Languages } from "@/language";
 import {
   useLanguage,
   usePro,
+  useSavedTickets,
   useThemeMode,
   useTicketAnswers,
   useTickets,
 } from "@/store/selectors";
 import { LanguageType } from "@/store/slices/language.slice";
-import { addTicketToSaved } from "@/store/slices/saved_tickets.slice";
+import {
+  addTicketToSaved,
+  removeTicketFromSaved,
+} from "@/store/slices/saved_tickets.slice";
 import { addNewAnswerTicketTest } from "@/store/slices/ticket.slice";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
@@ -44,6 +48,7 @@ export default function ticketTest() {
   const dispatch = useDispatch();
   const [isFinished, setFinished] = useState(false);
   const [timer, setTimer] = useState<number>(15 * 60);
+  const saved_tickets = useSavedTickets();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -64,9 +69,7 @@ export default function ticketTest() {
   }, []);
 
   const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
+    const m = Math.floor(seconds / 60).toString().padStart(2, "0");
     const s = (seconds % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   };
@@ -78,6 +81,7 @@ export default function ticketTest() {
       </View>
     );
   }
+
   if (!tickets || !tickets[+id - 1]) {
     return (
       <View>
@@ -87,32 +91,22 @@ export default function ticketTest() {
   }
 
   const ticket = tickets?.[Number(id) - 1]?.children ?? [];
-
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
-
   const question = ticket[currentQuestion];
+
   const answer = useMemo(
     () => answers.find((i) => i.ticketId == +id),
-    [answers]
+    [answers, id]
   );
+
+  const this_ticket = useMemo(() => {
+    return saved_tickets.find((i) => i.id == +id + currentQuestion);
+  }, [currentQuestion, saved_tickets]);
+
   const normalizeUrl = (base: string, path: string) => {
-    // Agar path boshida ./ yoki / bo‘lsa tozalaymiz
     const cleanPath = path.replace(/^\.?\//, "");
     return `${base.replace(/\/$/, "")}/${cleanPath}`;
   };
-
-  useEffect(() => {
-    if (question) {
-      console.log("🖼 Question object:", question);
-      console.log("🖼 question.imgUrl:", question?.imgUrl);
-      console.log(
-        "🖼 Full image URL:",
-        question?.imgUrl
-          ? BASE_URL + question.imgUrl.slice(2)
-          : "Default ishlatiladi"
-      );
-    }
-  }, [currentQuestion]);
 
   return (
     <ScrollView
@@ -136,27 +130,26 @@ export default function ticketTest() {
               visible={isFinished}
               animationType="fade"
               transparent={true}
-              onRequestClose={() => {
-                setFinished(false);
-              }}
+              onRequestClose={() => setFinished(false)}
             >
               <View style={styles.modalBackground}>
                 <View style={styles.modalContent}>
                   <Text style={styles.modal_title}>
                     {Languages[language]["modals"]["finish_ticket_warning"]}
                     <Text style={{ color: COLOR.red }}>
-                      {Languages[language]["modals"]["finish_ticket_question"]}
+                      {
+                        Languages[language]["modals"][
+                          "finish_ticket_question"
+                        ]
+                      }
                     </Text>
                   </Text>
                   <View style={styles.modal_btns}>
                     <TouchableOpacity
                       style={styles.modal_btn_no}
-                      onPress={() => {
-                        setFinished(false);
-                      }}
+                      onPress={() => setFinished(false)}
                     >
                       <Text style={styles.modal_btn_no_text}>
-                        {" "}
                         {Languages[language]["modals"]["no"]}
                       </Text>
                     </TouchableOpacity>
@@ -178,19 +171,25 @@ export default function ticketTest() {
                 </View>
               </View>
             </Modal>
-            <TouchableOpacity
-              onPress={() => {
-                setFinished(true);
-              }}
-            >
+            <TouchableOpacity onPress={() => setFinished(true)}>
               <FlagIcon color="#D0D0D0" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                dispatch(addTicketToSaved({ ...question, id: +id - 1 }));
+                if (this_ticket) {
+                  dispatch(
+                    removeTicketFromSaved({ ticketId: +id + currentQuestion })
+                  );
+                } else {
+                  dispatch(
+                    addTicketToSaved({ ...question, id: +id + currentQuestion })
+                  );
+                }
               }}
             >
-              <ArchiveIcon color="#D0D0D0" />
+              <ArchiveIcon
+                color={this_ticket ? COLOR.green : "#D0D0D0"}
+              />
             </TouchableOpacity>
             <View style={styles.container_header_timer}>
               <Text style={styles.container_header_timer_text}>
@@ -199,24 +198,25 @@ export default function ticketTest() {
             </View>
           </View>
         </View>
+
         <View style={styles.question_number_list}>
           <FlatList
             data={ticket}
             horizontal
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item, index }) => {
-              const ans = answer?.answers.find((i) => i.questionId === index);
+              const ans = answer?.answers.find((i)=>i.questionId == index)
               return (
                 <TouchableOpacity
                   style={[
                     styles.question_number,
                     ans
-                      ? ans.currentAnswer == item.currentAnswer
+                      ? ans.correct_answer == item.correct_answer
                         ? styles.question_number_green_color
                         : styles.question_number_red_color
                       : styles.question_number_default_color,
                   ]}
-                  key={index}
+                  onPress={() => setCurrentQuestion(index)}
                 >
                   <Text
                     style={{
@@ -229,19 +229,19 @@ export default function ticketTest() {
                 </TouchableOpacity>
               );
             }}
-            ItemSeparatorComponent={() => <View style={{ width: 6 }}></View>}
+            ItemSeparatorComponent={() => <View style={{ width: 6 }} />}
           />
         </View>
+
         <View style={styles.question_cont}>
           <Text style={styles.question_cont_text}>
-            {question["questions"][language as LanguageType]}
+            {question["questions"][language]}
           </Text>
-          {question.imgUrl ? (
+
+          {question.imgUrl?.length > 0 ? (
             <Image
               source={{
-                uri: question?.imgUrl
-                  ? normalizeUrl(BASE_URL, question.imgUrl)
-                  : normalizeUrl(BASE_URL, "images/default.png"),
+                uri: normalizeUrl(BASE_URL, question.imgUrl),
               }}
               style={{
                 marginTop: 15,
@@ -252,7 +252,7 @@ export default function ticketTest() {
               }}
             />
           ) : (
-            <View style={styles.default_img}></View>
+            <View style={styles.default_img} />
           )}
 
           <View>
@@ -263,14 +263,19 @@ export default function ticketTest() {
                   key={index}
                   onPress={() => {
                     const nextQuestionIndex = currentQuestion + 1;
-
-                    dispatch(
-                      addNewAnswerTicketTest({
-                        ticketId: +id,
-                        currentAnswer: index + 1,
-                        questionId: currentQuestion,
-                      })
+                    const ans = answer?.answers.find(
+                      (i) => i.questionId == currentQuestion
                     );
+
+                    if (!ans) {
+                      dispatch(
+                        addNewAnswerTicketTest({
+                          ticketId: +id,
+                          correct_answer: index + 1,
+                          questionId: currentQuestion,  
+                        })
+                      );
+                    }
 
                     if (nextQuestionIndex >= ticket.length) {
                       router.push({
@@ -283,18 +288,20 @@ export default function ticketTest() {
                   }}
                 >
                   <Text style={styles.answer_text}>
-                    {item[language as LanguageType]}
+                    {item[language]}
                   </Text>
                 </TouchableOpacity>
               );
             })}
           </View>
+
           {pro ? (
             <Text style={styles.comment_text}>
-              izox: {question["izoh"][language as LanguageType] || ""}
+              izox: {question["izoh"][language] || ""}
             </Text>
           ) : null}
         </View>
+
         <View style={styles.ads_cont}>
           <Text style={styles.ads_cont_text}>Ads</Text>
         </View>
@@ -341,14 +348,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   question_number: {
-    width: 26,
-    height: 26,
+    width: 40,
+    height: 40,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
   },
   question_number_text: {
-    fontSize: 14,
+    fontSize: 16,
+    color:COLOR.white
   },
   question_number_default_color: {
     backgroundColor: COLOR.gray3,
@@ -386,7 +394,7 @@ const styles = StyleSheet.create({
   },
   answer: {
     width: "100%",
-    height: 40,
+    padding:8,
     borderWidth: 1,
     marginTop: 10,
     borderColor: COLOR.white,

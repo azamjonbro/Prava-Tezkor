@@ -15,7 +15,7 @@ export interface SavedTicketI {
     krill: string;
   };
   answers: TicketAnswerI[];
-  currentAnswer: number;
+  correct_answer: number;
   izoh: {
     lotin: string;
     rus: string;

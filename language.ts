@@ -9,7 +9,11 @@ export const Languages = {
         exam10: "Imtihon 10 real",
         marathon: "Marafon",
         random: "Random",
-        saved: "Saqlanganlar",
+        saved: {
+          title: "Saqlanganlar",
+          question: "savol",
+          see: "Korish",
+        },
       },
     },
     tabs: {
@@ -18,6 +22,7 @@ export const Languages = {
       template: "Shablonlar",
       marathon: "Marafon",
       offer: "Taklif",
+      bonus: "Bonus",
     },
     settings: {
       title: "Sozlamalar",
@@ -34,8 +39,6 @@ export const Languages = {
         all_questions: "Barcha savollar",
         dark_mode: "Tungi rejim",
         app_language: "Ilova tili",
-        keep_screen_on: "Ekran doim yoniq",
-        vibration: "Vibratsiya",
         telegram: "Telegram",
         instagram: "Instagram",
         privacy_policy: "Privacy policy",
@@ -60,6 +63,23 @@ export const Languages = {
       send: "Yuborish",
       invited_users: "Taklif qilinganlar",
       not_found: "Ma’lumot topilmadi",
+      coin: {
+        title: "Sizning tanganginz",
+        description: "Agar tanga ishlashnihohlasangiz shartlarni bajaring",
+        coins_excersize: {
+          first: "Do’stlarni taklif qilish   1 = 200coin",
+          second: "Reklama ko’rish  1 x 20coin",
+          third: "Ilovadagi kamchiliklarni yozing va  bonus oling",
+        },
+        not_enough_money: "",
+        payment: {
+          title: "To’lovlar",
+          payment: "Tolov 1",
+          agree: "To’langan",
+          rejected: "To’lanmagan",
+          not_found: "Sizda hech qanday to’lovlar mavjud emas",
+        },
+      },
     },
     template: {
       title: "Biletlar",
@@ -83,6 +103,11 @@ export const Languages = {
       result_title: "Natija",
       used: "To‘g‘ri",
       rejected: "Noto‘g‘ri",
+      results_title: "Natijalar",
+      finished: "Tugallangan",
+      unfinished: "Tugallanmagan",
+      exercise: "Topshiriq",
+      start: "Boshlash",
     },
     marathon: {
       title: "Biletlar",
@@ -101,6 +126,12 @@ export const Languages = {
       no: "YO‘Q",
       finish_ticket_warning: "Biletni tugatsangiz natijalar saqlanib qolmaydi",
       finish_ticket_question: "Biletni tugatasizmi ?",
+      earn_money: {
+        title: "Ballaringizni alishtirishni hohlaysizmi?",
+        description: "Sizdan karta raqam kiritishingizni so’raymiz.",
+        credit_card_input: "Karta raqamingizni kiriting",
+        name_input: "Ism familiya kiriting",
+      },
     },
   },
   rus: {
@@ -113,7 +144,11 @@ export const Languages = {
         exam10: "Экзамен 10 вопросов",
         marathon: "Марафон",
         random: "Случайный",
-        saved: "Сохранённые",
+        saved: {
+          title: "Сохранённые",
+          question: "вопрос",
+          see: "Посмотреть",
+        },
       },
     },
     tabs: {
@@ -122,6 +157,7 @@ export const Languages = {
       template: "Шаблоны",
       marathon: "Марафон",
       offer: "Предложение",
+      bonus: "Бонус",
     },
     settings: {
       title: "Настройки",
@@ -138,8 +174,6 @@ export const Languages = {
         all_questions: "Все вопросы",
         dark_mode: "Темная тема",
         app_language: "Язык приложения",
-        keep_screen_on: "Экран всегда включен",
-        vibration: "Вибрация",
         telegram: "Телеграм",
         instagram: "Инстаграм",
         privacy_policy: "Политика конфиденциальности",
@@ -163,6 +197,23 @@ export const Languages = {
       send: "Отправить",
       invited_users: "Приглашённые пользователи",
       not_found: "Информация не найдена",
+      coin: {
+        title: "Ваши монеты",
+        description: "Если вы хотите зарабатывать монеты, выполните условия",
+        coins_excersize: {
+          first: "Пригласите друзей   1 = 200 монет",
+          second: "Посмотрите рекламу  1 x 20 монет",
+          third: "Сообщите об ошибках в приложении и получите бонус",
+        },
+        not_enough_money: "У вас недостаточно монет",
+        payment: {
+          title: "Платежи",
+          payment: "Платёж 1",
+          agree: "Оплачено",
+          rejected: "Не оплачено",
+          not_found: "У вас нет никаких платежей",
+        },
+      },
     },
     template: {
       title: "Билеты",
@@ -186,6 +237,11 @@ export const Languages = {
       result_title: "Результат",
       used: "Количество правильных",
       rejected: "Количество неправильных",
+      start: "Начать",
+      results_title: "Результаты",
+      finished: "Завершено",
+      unfinished: "Не завершено",
+      exercise: "Упражнение",
     },
     marathon: {
       title: "Билеты",
@@ -205,6 +261,12 @@ export const Languages = {
       finish_ticket_warning:
         "Если вы завершите билет, результаты не сохранятся",
       finish_ticket_question: "Завершить билет?",
+      earn_money: {
+        title: "Хотите обменять свои баллы?",
+        description: "Пожалуйста, введите номер карты.",
+        credit_card_input: "Введите номер вашей карты",
+        name_input: "Введите имя и фамилию",
+      },
     },
   },
   krill: {
@@ -217,7 +279,11 @@ export const Languages = {
         exam10: "Имтиҳон 10 реал",
         marathon: "Марафон",
         random: "Тасодифий",
-        saved: "Сақланганлар",
+        saved: {
+          title: "Сақланганлар",
+          question: "савол",
+          see: "Кўриш",
+        },
       },
     },
     tabs: {
@@ -226,6 +292,7 @@ export const Languages = {
       template: "Шаблонлар",
       marathon: "Марафон",
       offer: "Таклиф",
+      bonus: "Бонус",
     },
     settings: {
       title: "Созламалар",
@@ -242,8 +309,6 @@ export const Languages = {
         all_questions: "Барча саволлар",
         dark_mode: "Тунги режим",
         app_language: "Илова тили",
-        keep_screen_on: "Экран доим ёниқ",
-        vibration: "Вибрация",
         telegram: "Телеграм",
         instagram: "Инстаграм",
         privacy_policy: "Махфийлик сиёсати",
@@ -268,6 +333,23 @@ export const Languages = {
       send: "Юбориш",
       invited_users: "Таклиф қилинганлар",
       not_found: "Маълумот топилмади",
+      coin: {
+        title: "Сизнинг тангангиз",
+        description: "Агар танга ишлашни хоҳласангиз шартларни бажаринг",
+        coins_excersize: {
+          first: "Дўстларни таклиф қилиш   1 = 200 танга",
+          second: "Реклама кўриш  1 x 20 танга",
+          third: "Иловадаги камчиликларни ёзинг ва бонус олинг",
+        },
+        not_enough_money: "Сизда етарлича койин йўқ",
+        payment: {
+          title: "Тўловлар",
+          payment: "Тўлов 1",
+          agree: "Тўланган",
+          rejected: "Тўланмаган",
+          not_found: "Сизда ҳеч қандай тўловлар мавжуд эмас",
+        },
+      },
     },
     template: {
       title: "Билетлар",
@@ -291,6 +373,11 @@ export const Languages = {
       result_title: "Натижа",
       used: "Тўғри сони",
       rejected: "Нотўғри сони",
+      start: "Бошлаш",
+      results_title: "Натижалар",
+      finished: "Тугалланган",
+      unfinished: "Тугалланмаган",
+      exercise: "Топшириқ",
     },
     marathon: {
       title: "Билетлар",
@@ -309,6 +396,12 @@ export const Languages = {
       no: "ЙЎҚ",
       finish_ticket_warning: "Билетни тугатсангиз натижалар сақланмайди",
       finish_ticket_question: "Билетни тугатасизми?",
+      earn_money: {
+        title: "Балларингизни алмаштиришни хоҳлайсизми?",
+        description: "Сиздан карта рақамини киритишингизни сўраймиз.",
+        credit_card_input: "Карта рақамингизни киритинг",
+        name_input: "Исм фамилия киритинг",
+      },
     },
   },
 };

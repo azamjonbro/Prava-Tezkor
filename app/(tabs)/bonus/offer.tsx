@@ -12,7 +12,8 @@ import { api } from "@/services/api";
 import { useLanguage, useThemeMode } from "@/store/selectors";
 import { LanguageType } from "@/store/slices/language.slice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "expo-router";
+import { AxiosError } from "axios";
+import { useNavigation, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   Clipboard,
@@ -27,7 +28,7 @@ import {
 import { Toast } from "toastify-react-native";
 
 export interface UserList {
-  toUser: number;
+  invite_code: number;
 }
 
 export default function Offer() {
@@ -36,7 +37,7 @@ export default function Offer() {
   const [inviteInput, setInviteInput] = useState<string>("321678321783421");
   const [users, setUsers] = useState<UserList[]>([]);
 
-  const navigation = useNavigation();
+  const router = useRouter();
 
   const language = useLanguage();
 
@@ -52,43 +53,25 @@ export default function Offer() {
 
   const dark_mode = useThemeMode();
   const global_styles = createGlobalStyles(dark_mode);
-
-  useEffect(() => {
-    const getInviteCode = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        const { data, status } = await api.get("/api/user/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (status === 200) {
-          setInviteInput(data.user.invite_code);
-        }
-      } catch (err) {
-        const error = err as Error;
-        Toast.error(error.message);
+  const getUser = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const { data, status } = await api.get("/api/user/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (status === 200) {
+        setInviteInput(data.user.invite_code);
+        setUsers(data.user.invitedUsers);
       }
-    };
-    getInviteCode();
-  }, []);
-
+    } catch (err) {
+      const error = err as Error;
+      Toast.error(error.message);
+    }
+  };
   useEffect(() => {
-    const getInviteUsers = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        const { data, status } = await api.get("/api/user/invited_users", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (status === 200) {
-          setUsers(data.invited_users);
-        }
-      } catch (err) {
-        const error = err as Error;
-        Toast.error(error.message);
-      }
-    };
-    getInviteUsers();
+    getUser();
   }, []);
 
   const handleAddInvitation = async () => {
@@ -99,9 +82,9 @@ export default function Offer() {
       try {
         const token = await AsyncStorage.getItem("token");
         const { status } = await api.post(
-          "/api/invited_user/create",
+          "/api/user/invite",
           {
-            toUser: add_input,
+            invite_code: add_input,
           },
           {
             headers: {
@@ -109,12 +92,13 @@ export default function Offer() {
             },
           }
         );
-        if (status === 201) {
+        if (status === 200) {
           Toast.success("Xabar keti");
+          getUser();
         }
       } catch (err) {
-        const error = err as Error;
-        Toast.error(error.message);
+        const error = err as AxiosError<{ message: string }>;
+        Toast.error(error?.response?.data?.message || "Unexpected error");
       }
     }
   };
@@ -127,7 +111,7 @@ export default function Offer() {
         <View style={styles.container_header}>
           <TouchableOpacity
             style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
-            onPress={() => navigation.goBack()}
+            onPress={() => router.push({pathname:"/(tabs)/bonus"})}
           >
             <NavigationArrowLeftIcon
               color={dark_mode ? "#fff" : COLOR.black1}
@@ -242,7 +226,7 @@ export default function Offer() {
                     <View key={index}>
                       <View style={styles.list_of_user}>
                         <UserIcon color="#D0D0D0" />
-                        <Text style={styles.list_of_user_id}>{i.toUser}</Text>
+                        <Text style={styles.list_of_user_id}>{i.invite_code}</Text>
                       </View>
                       <View style={styles.list_of_invitation_line}></View>
                     </View>
@@ -273,7 +257,7 @@ const createStyles = (dark_mode: boolean) =>
       alignItems: "center",
       justifyContent: "space-between",
       flexDirection: "row",
-      paddingTop:40,
+      paddingTop: 40,
     },
     navigation_title: {
       fontSize: 24,

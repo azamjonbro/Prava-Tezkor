@@ -42,7 +42,7 @@ export default function Template() {
         <View style={styles.container_header}>
           <TouchableOpacity
             style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
-            onPress={() => router.back()}
+            onPress={() => router.push({pathname:"/(tabs)/home"})}
           >
             <NavigationArrowLeftIcon
               color={dark_mode ? "#fff" : COLOR.black1}
@@ -93,7 +93,7 @@ export default function Template() {
             onPress={() =>
               router.push({
                 pathname: "/template/template-detail",
-                params: { from: 0, to: 10 },
+                params: { from: 0, to: 9 },
               })
             }
           >
@@ -106,7 +106,7 @@ export default function Template() {
             onPress={() =>
               router.push({
                 pathname: "/template/template-detail",
-                params: { from: 10, to: 20 },
+                params: { from: 9, to: 19 },
               })
             }
           >
@@ -121,7 +121,7 @@ export default function Template() {
             onPress={() =>
               router.push({
                 pathname: "/template/template-detail",
-                params: { from: 20, to: 300 },
+                params: { from: 19, to: 299 },
               })
             }
           >
@@ -134,7 +134,7 @@ export default function Template() {
             onPress={() =>
               router.push({
                 pathname: "/template/template-detail",
-                params: { from: 300, to: 500 },
+                params: { from: 299, to: 500 },
               })
             }
           >
