@@ -34,15 +34,18 @@ export default function Test() {
   const language = useLanguage() as LanguageType;
   const home_test = useHomeTest();
   const pro = usePro();
+  const dispatch = useDispatch();
+  const [disabledInput, setDisabledInput] = useState(false);
+  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+  const question = home_test.questions[currentQuestion];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setTimer((prev) => {
         if (prev <= 1) {
-          router.push({
-            pathname: "/home/result",
-          });
           clearInterval(interval);
+          router.push({ pathname: "/home/result" });
           return 0;
         }
         return prev - 1;
@@ -60,10 +63,43 @@ export default function Test() {
     return `${m}:${s}`;
   };
 
-  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
-  const question = home_test.questions[currentQuestion];
+  const handleAnswerPress = (index: number) => {
+    const alreadyAnswered = home_test.answers.find(
+      (i) => i.questionId === currentQuestion
+    );
 
-  const dispatch = useDispatch();
+    if (alreadyAnswered) return;
+
+    const nextQuestionIndex = currentQuestion + 1;
+    dispatch(
+      answerToHomeTest({
+        answer: {
+          correct_answer: index + 1,
+          questionId: currentQuestion,
+        },
+      })
+    );
+
+    setDisabledInput(true);
+    setShowCorrectAnswer(true);
+
+    setTimeout(() => {
+      if (nextQuestionIndex >= home_test.questions.length) {
+        router.push({ pathname: "/home/result" });
+      } else {
+        setCurrentQuestion(nextQuestionIndex);
+      }
+      setDisabledInput(false);
+      setShowCorrectAnswer(false);
+    }, 3000);
+  };
+
+  if (!question) return null;
+
+  const normalizeUrl = (base: string, path: string) => {
+    const cleanPath = path.replace(/^\.?\//, "");
+    return `${base.replace(/\/$/, "")}/${cleanPath}`;
+  };
 
   return (
     <ScrollView
@@ -101,12 +137,16 @@ export default function Test() {
                   style={[
                     styles.question_number,
                     ans
-                      ? ans.currentAnswer == item.currentAnswer
+                      ? ans.correct_answer === item.correct_answer
                         ? styles.question_number_green_color
                         : styles.question_number_red_color
                       : styles.question_number_default_color,
                   ]}
-                  key={index}
+                  onPress={() => {
+                    if (!showCorrectAnswer) {
+                      setCurrentQuestion(index);
+                    }
+                  }}
                 >
                   <Text
                     style={{
@@ -119,52 +159,52 @@ export default function Test() {
                 </TouchableOpacity>
               );
             }}
-            ItemSeparatorComponent={() => <View style={{ width: 6 }}></View>}
+            ItemSeparatorComponent={() => <View style={{ width: 6 }} />}
           />
         </View>
 
         <View style={styles.question_cont}>
           <Text style={styles.question_cont_text}>
-            {question["questions"][language as LanguageType]}
+            {question["questions"][language]}
           </Text>
-          {question.imgUrl ? (
+
+          {question.imgUrl.length > 0 ? (
             <Image
-              source={{ uri: BASE_URL + question.imgUrl.slice(4) }}
-              height={180}
+              source={{ uri: normalizeUrl(BASE_URL,question.imgUrl) }}
               style={{
                 marginTop: 15,
                 backgroundColor: "red",
                 width: "100%",
+                height:180,
                 borderRadius: 10,
               }}
             />
           ) : (
             <View style={styles.default_img}></View>
           )}
-          <View>
+
+          <View style={styles.answers}>
             {question.answers.map((item, index) => {
+              const answer = home_test.answers.find(
+                (i) => i.questionId === currentQuestion
+              );
+              const isSelected = answer?.correct_answer === index + 1;
+              const isCorrect = question.correct_answer === index + 1;
+
+              const showCorrect = showCorrectAnswer && isCorrect;
+              const showIncorrect = isSelected && !isCorrect;
+
               return (
                 <TouchableOpacity
-                  style={styles.answer}
                   key={index}
-                  onPress={() => {
-                    const nextQuestionIndex = currentQuestion + 1;
-
-                    dispatch(
-                      answerToHomeTest({
-                        answer: {
-                          currentAnswer: index + 1,
-                          questionId: currentQuestion,
-                        },
-                      })
-                    );
-
-                    if (nextQuestionIndex >= home_test.questions.length) {
-                      router.push({ pathname: "/home/result" });
-                    } else {
-                      setCurrentQuestion(nextQuestionIndex);
-                    }
-                  }}
+                  style={[
+                    styles.answer,
+                    showCorrect ? styles.green_answer_text : {},
+                    showIncorrect ? styles.red_answer_text : {},
+                    isSelected && isCorrect ? styles.green_answer_text : {},
+                  ]}
+                  disabled={disabledInput}
+                  onPress={() => handleAnswerPress(index)}
                 >
                   <Text style={styles.answer_text}>
                     {item[language as LanguageType]}
@@ -173,12 +213,14 @@ export default function Test() {
               );
             })}
           </View>
-          {pro ? (
+
+          {pro && (
             <Text style={styles.comment_text}>
-              izox: {question["izoh"][language as LanguageType] || ""}
+              izox: {question["izoh"][language] || ""}
             </Text>
-          ) : null}
+          )}
         </View>
+
         <View style={styles.ads_cont}>
           <Text style={styles.ads_cont_text}>Ads</Text>
         </View>
@@ -190,19 +232,18 @@ export default function Test() {
 const createStyles = (dark_mode: boolean) =>
   StyleSheet.create({
     container_header: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
       flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
     },
     navigation_title: {
       fontSize: 24,
-      fontWeight: 400,
+      fontWeight: "400",
       color: COLOR.white,
     },
     container_header_right: {
-      alignItems: "center",
       flexDirection: "row",
+      alignItems: "center",
       gap: 8,
     },
     container_header_timer: {
@@ -216,7 +257,7 @@ const createStyles = (dark_mode: boolean) =>
     container_header_timer_text: {
       fontSize: 18,
       color: COLOR.white,
-      fontWeight: 400,
+      fontWeight: "400",
     },
     question_number_list: {
       backgroundColor: COLOR.black1,
@@ -225,29 +266,27 @@ const createStyles = (dark_mode: boolean) =>
       borderRadius: 10,
     },
     question_number: {
-      width: 26,
-      height: 26,
+      width: 40,
+      height: 40,
       borderRadius: 10,
       alignItems: "center",
       justifyContent: "center",
     },
     question_number_text: {
-      fontSize: 14,
+      fontSize: 16,
+      color: COLOR.white,
     },
     question_number_default_color: {
       backgroundColor: COLOR.gray3,
     },
     question_number_red_color: {
       backgroundColor: COLOR.red,
-      color: COLOR.white,
     },
     question_number_green_color: {
       backgroundColor: COLOR.green,
-      color: COLOR.white,
     },
     question_cont: {
       width: "100%",
-      height: "70%",
       backgroundColor: COLOR.black1,
       marginTop: 16,
       padding: 8,
@@ -265,12 +304,11 @@ const createStyles = (dark_mode: boolean) =>
       marginTop: 15,
     },
     answers: {
-      marginTop: 5,
-      flexDirection: "column",
+      marginTop: 10,
     },
     answer: {
       width: "100%",
-      height: 40,
+      padding: 5,
       borderWidth: 1,
       marginTop: 10,
       borderColor: COLOR.white,
@@ -282,6 +320,12 @@ const createStyles = (dark_mode: boolean) =>
       color: COLOR.white,
       fontSize: 16,
     },
+    green_answer_text: {
+      backgroundColor: COLOR.green,
+    },
+    red_answer_text: {
+      backgroundColor: COLOR.red,
+    },
     comment_text: {
       color: COLOR.white,
       fontSize: 12,
@@ -289,62 +333,16 @@ const createStyles = (dark_mode: boolean) =>
     },
     ads_cont: {
       width: "100%",
-      height: "15%",
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: COLOR.gray3,
       marginTop: 22,
       borderRadius: 10,
       marginBottom: 22,
+      padding: 10,
     },
     ads_cont_text: {
       fontSize: 24,
-    },
-    modalBackground: {
-      flex: 1,
-      justifyContent: "flex-end",
-      alignItems: "center",
-      backgroundColor: COLOR.white2,
-      paddingBottom: 40,
-    },
-    modalContent: {
-      width: 300,
-      padding: 8,
-      backgroundColor: "white",
-      borderRadius: 10,
-    },
-    modal_title: {
-      fontSize: 16,
-      fontWeight: 400,
-    },
-    modal_btns: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      marginTop: 32,
-    },
-    modal_btn_no: {
-      width: "40%",
-      height: 36,
-      backgroundColor: COLOR.red,
-      alignItems: "center",
-      justifyContent: "center",
-      borderRadius: 10,
-    },
-    modal_btn_no_text: {
-      fontSize: 16,
-      color: COLOR.white,
-    },
-    modal_btn_yes: {
-      width: "40%",
-      height: 36,
-      backgroundColor: COLOR.green,
-      alignItems: "center",
-      justifyContent: "center",
-      borderRadius: 10,
-    },
-    modal_btn_yes_text: {
-      fontSize: 16,
-      color: COLOR.white,
+      color: COLOR.black1,
     },
   });

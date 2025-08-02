@@ -19,5 +19,9 @@ export const COLOR = {
   gray3: "#D9D9D9",
   gray4: "#7C7C7C",
   gray5: "#7D7D7D",
+  gray6:"#656363",
   black2: "#3A3A3C",
+
+  dark_bg:"black",
+  dark_color:"black"
 };

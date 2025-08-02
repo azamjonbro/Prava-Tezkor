@@ -37,10 +37,12 @@ export default function Test() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const pro = usePro();
   const [isErrors, setIsErrors] = useState(false);
-
+  const [disabledInput, setDisabledInput] = useState(false);
+  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
   const global_styles = createGlobalStyles(dark_mode);
   const styles = createStyles(dark_mode);
-  const question = marathons?.questions[currentQuestion];
+  const marathon = marathons[marathons.length - 1];
+  const question = marathon?.questions[currentQuestion];
   const Mainlanguage = Languages[language]["marathon"];
   const dispatch = useDispatch();
 
@@ -69,11 +71,46 @@ export default function Test() {
     return () => clearInterval(interval);
   }, []);
 
+  const handleAnswerPress = (index: number) => {
+    const alreadyAnswered = marathon.answers.find(
+      (i) => i.questionId === currentQuestion
+    );
+
+    if (alreadyAnswered) return;
+
+    const nextQuestionIndex = currentQuestion + 1;
+    dispatch(
+      answerTheQuestionMarathon({
+        marathonId: marathon.id,
+        answer: { correct_answer: index, questionId: currentQuestion },
+      })
+    );
+
+    setDisabledInput(true);
+    setShowCorrectAnswer(true);
+
+    setTimeout(() => {
+      if (nextQuestionIndex >= marathon.questions.length) {
+        router.push({ pathname: "/marathon/result" });
+      } else {
+        setCurrentQuestion(nextQuestionIndex);
+      }
+      setDisabledInput(false);
+      setShowCorrectAnswer(false);
+    }, 3000);
+  };
+
   useEffect(() => {
-    if (marathons.rejected === 5) {
+    if (marathon?.rejected === 5) {
       setIsErrors(true);
     }
-  }, [marathons.rejected]);
+  }, [marathon?.rejected]);
+  console.log(question);
+
+  const normalizeUrl = (base: string, path: string) => {
+    const cleanPath = path.replace(/^\.?\//, "");
+    return `${base.replace(/\/$/, "")}/${cleanPath}`;
+  };
 
   return (
     <ScrollView>
@@ -101,24 +138,26 @@ export default function Test() {
 
         <View style={styles.question_number_list}>
           <FlatList
-            data={marathons.questions}
+            data={marathon.questions}
             horizontal
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item, index }) => {
-              const ans = marathons.answers.find(
-                (i) => i.questionId == item.id
-              );
+              const ans = marathon.answers.find((i) => i.questionId === index);
               return (
                 <TouchableOpacity
                   style={[
                     styles.question_number,
                     ans
-                      ? ans.currentAnswer === item.currentAnswer
+                      ? ans.correct_answer === item.correct_answer
                         ? styles.question_number_green_color
                         : styles.question_number_red_color
                       : styles.question_number_default_color,
                   ]}
-                  key={index}
+                  onPress={() => {
+                    if (!showCorrectAnswer) {
+                      setCurrentQuestion(index);
+                    }
+                  }}
                 >
                   <Text
                     style={{
@@ -137,46 +176,46 @@ export default function Test() {
 
         <View style={styles.question_cont}>
           <Text style={styles.question_cont_title}>
-            {question.questions[language]}
+            {question?.questions[language] || ""}
           </Text>
-          {BASE_URL + question.imgUrl ? (
+          {question.imgUrl?.length > 0 ? (
             <Image
-              source={{ uri: BASE_URL + question.imgUrl.slice(4) }}
-              height={180}
+              source={{
+                uri: normalizeUrl(BASE_URL, question.imgUrl),
+              }}
               style={{
                 marginTop: 15,
+                height: 180,
                 backgroundColor: "red",
                 width: "100%",
                 borderRadius: 10,
               }}
             />
           ) : (
-            <View style={styles.default_img}></View>
+            <View style={styles.default_img} />
           )}
           <View>
             {question.answers.map((item, index) => {
+              const answer = marathon.answers.find(
+                (i) => i.questionId === currentQuestion
+              );
+              const isSelected = answer?.correct_answer === index + 1;
+              const isCorrect = question.correct_answer === index + 1;
+
+              const showCorrect = showCorrectAnswer && isCorrect;
+              const showIncorrect = isSelected && !isCorrect;
+
               return (
                 <TouchableOpacity
-                  style={styles.answer}
                   key={index}
-                  onPress={() => {
-                    const nextQuestionIndex = currentQuestion + 1;
-
-                    dispatch(
-                      answerTheQuestionMarathon({
-                        questionId: nextQuestionIndex,
-                        currentAnswer: index + 1,
-                      })
-                    );
-
-                    if (nextQuestionIndex >= marathons.questions.length) {
-                      router.push({
-                        pathname: "/marathon/result",
-                      });
-                    } else {
-                      setCurrentQuestion(nextQuestionIndex);
-                    }
-                  }}
+                  style={[
+                    styles.answer,
+                    showCorrect ? styles.green_answer_text : {},
+                    showIncorrect ? styles.red_answer_text : {},
+                    isSelected && isCorrect ? styles.green_answer_text : {},
+                  ]}
+                  disabled={disabledInput}
+                  onPress={() => handleAnswerPress(index)}
                 >
                   <Text style={styles.answer_text}>
                     {item[language as LanguageType]}
@@ -272,14 +311,15 @@ const createStyles = (dark_mode: boolean) =>
       borderRadius: 10,
     },
     question_number: {
-      width: 26,
-      height: 26,
+      width: 40,
+      height: 40,
       borderRadius: 10,
       alignItems: "center",
       justifyContent: "center",
     },
     question_number_text: {
-      fontSize: 14,
+      fontSize: 16,
+      color: COLOR.white,
     },
     question_number_default_color: {
       backgroundColor: COLOR.gray3,
@@ -305,7 +345,7 @@ const createStyles = (dark_mode: boolean) =>
     },
     answer: {
       width: "100%",
-      height: 40,
+      padding: 8,
       borderWidth: 1,
       marginTop: 10,
       borderColor: COLOR.white,
@@ -335,6 +375,12 @@ const createStyles = (dark_mode: boolean) =>
     ads_cont_text: {
       fontSize: 24,
     },
+    green_answer_text: {
+      backgroundColor: COLOR.green,
+    },
+    red_answer_text: {
+      backgroundColor: COLOR.red,
+    },
     question_cont: {
       width: "100%",
       minHeight: 420,
@@ -342,6 +388,7 @@ const createStyles = (dark_mode: boolean) =>
       backgroundColor: COLOR.black1,
       marginTop: 16,
       overflowY: "scroll",
+      borderRadius: 10,
     },
     question_cont_title: {
       fontSize: 14,

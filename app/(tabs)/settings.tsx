@@ -1,7 +1,10 @@
 import { createGlobalStyles } from "@/assets/styles/global.style";
 import {
+  AllQuestionIcon,
     ArrowSquareIcon,
     EyeIcon,
+    FinesIcon,
+    InfoIcon,
     InfoIcon2,
     InstagramIcon,
     LinkIcon,
@@ -25,6 +28,8 @@ import { setTheme } from "@/store/slices/theme-mode.slice";
 import { useNavigation } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
+  Linking,
     Modal,
     ScrollView,
     StyleSheet,
@@ -51,6 +56,16 @@ export default function Settings() {
 
   const global_styles = createGlobalStyles(dark_mode)
 
+  const handleOpen = async (url:string)=>{
+     const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`Don't know how to open this URL: ${url}`);
+    }
+  }
+
   return (
     <View style={global_styles.container2}>
       <ScrollView>
@@ -62,60 +77,11 @@ export default function Settings() {
             <NavigationArrowLeftIcon color="#fff" />
             <Text style={styles.navigation_title}>{MainLanguage["title"]}</Text>
           </TouchableOpacity>
+          <TouchableOpacity>
+            <InfoIcon color="#B0B0B0" />
+          </TouchableOpacity>
         </View>
         <View style={{ ...styles.line, marginTop: 20 }}></View>
-        <Text style={styles.section_title}>
-          {MainLanguage["sections"]["others"]}
-        </Text>
-        <View style={styles.section}>
-          <View style={styles.line}></View>
-          <View style={styles.section_child}>
-            <View style={styles.section_child_left}>
-              <View style={styles.section_child_icon}>
-                <SmartCarIcon color={COLOR.green2} />
-              </View>
-              <Text style={styles.section_child_text}>
-                {MainLanguage["options"]["fines"]}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.line}></View>
-          <View style={styles.section_child}>
-            <View style={styles.section_child_left}>
-              <View style={styles.section_child_icon}>
-                <ArrowSquareIcon color={COLOR.green2} />
-              </View>
-              <Text style={styles.section_child_text}>
-                {MainLanguage["options"]["road_signs"]}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.line}></View>
-          <View style={styles.section_child}>
-            <View style={styles.section_child_left}>
-              <View style={styles.section_child_icon}>
-                <PlayCircleIcon color={COLOR.green2} />
-              </View>
-              <Text style={styles.section_child_text}>
-                {MainLanguage["options"]["video_guide"]}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.line}></View>
-          <View style={styles.section_child}>
-            <View style={styles.section_child_left}>
-              <View style={styles.section_child_icon}>
-                <MenuBoardIcon color={COLOR.green2} />
-              </View>
-              <Text style={styles.section_child_text}>
-                {MainLanguage["options"]["all_questions"]}
-              </Text>
-            </View>
-          </View>
-        </View>
         <Text style={styles.section_title}>
           {MainLanguage["sections"]["extras"]}
         </Text>
@@ -249,10 +215,10 @@ export default function Settings() {
           <View style={styles.section_child}>
             <View style={styles.section_child_left}>
               <View style={styles.section_child_icon}>
-                <Screen2Icon color={COLOR.green2} />
+                <AllQuestionIcon color={COLOR.green2} />
               </View>
               <Text style={styles.section_child_text}>
-                {MainLanguage["options"]["keep_screen_on"]}
+                {MainLanguage["options"]["all_questions"]}
               </Text>
             </View>
           </View>
@@ -261,19 +227,21 @@ export default function Settings() {
           <View style={styles.section_child}>
             <View style={styles.section_child_left}>
               <View style={styles.section_child_icon}>
-                <ScreenIcon color={COLOR.green2} />
+                <FinesIcon color={COLOR.green2} />
               </View>
               <Text style={styles.section_child_text}>
-                {MainLanguage["options"]["vibration"]}
+                {MainLanguage["options"]["fines"]}
               </Text>
             </View>
           </View>
         </View>
+
+
         <Text style={styles.section_title}>
           {MainLanguage["sections"]["contact"]}
         </Text>
         <View style={styles.section}>
-          <View style={styles.section_child}>
+          <TouchableOpacity style={styles.section_child} onPress={()=>handleOpen("https://telegram.org/")}>
             <View style={styles.section_child_left}>
               <View style={styles.section_child_icon}>
                 <TelegramIcon color={COLOR.green2} />
@@ -282,10 +250,10 @@ export default function Settings() {
                 {MainLanguage["options"]["telegram"]}
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.line}></View>
-          <View style={styles.section_child}>
+          <TouchableOpacity style={styles.section_child} onPress={()=>handleOpen("https://instagram.com")}>
             <View style={styles.section_child_left}>
               <View style={styles.section_child_icon}>
                 <InstagramIcon color={COLOR.green2} />
@@ -294,10 +262,10 @@ export default function Settings() {
                 {MainLanguage["options"]["instagram"]}
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.line}></View>
-          <View style={styles.section_child}>
+          <TouchableOpacity style={styles.section_child} onPress={()=>handleOpen("https://telegra.ph/Privacy-Policy-for-Prava-UZ--YHQ-2025-03-22")}>
             <View style={styles.section_child_left}>
               <View style={styles.section_child_icon}>
                 <SafeSecuratyIcon color={COLOR.green2} />
@@ -306,10 +274,10 @@ export default function Settings() {
                 {MainLanguage["options"]["privacy_policy"]}
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.line}></View>
-          <View style={styles.section_child}>
+          <TouchableOpacity style={styles.section_child} onPress={()=>handleOpen(`https://play.google.com/store/apps?hl=ru&pli=1`)}>
             <View style={styles.section_child_left}>
               <View style={styles.section_child_icon}>
                 <StarIcon color={COLOR.green2} />
@@ -318,10 +286,10 @@ export default function Settings() {
                 {MainLanguage["options"]["rate_app"]}
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.line}></View>
-          <View style={styles.section_child}>
+          <TouchableOpacity style={styles.section_child} onPress={()=>handleOpen(`https://play.google.com/store/apps?hl=ru&pli=1`)}>
             <View style={styles.section_child_left}>
               <View style={styles.section_child_icon}>
                 <LinkIcon color={COLOR.green2} />
@@ -330,7 +298,7 @@ export default function Settings() {
                 {MainLanguage["options"]["share_app"]}
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.line}></View>
           <View style={styles.section_child}>
@@ -361,7 +329,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingLeft: 12,
     paddingRight: 12,
-    paddingTop:40
   },
   navigation_title: {
     fontSize: 24,

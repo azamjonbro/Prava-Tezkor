@@ -1,4 +1,5 @@
-export const BASE_URL = "http://localhost:4556/";
+export const BASE_URL = "https://prava.safonon.uz/";
+// export const BASE_URL = "http://localhost:9000";
 
 export const HomeLinksParams = {
   twenty_exam: { link: "20 exam", params: 20 },

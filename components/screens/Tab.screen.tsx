@@ -1,4 +1,5 @@
 import {
+  BonusIcon,
   HomeIcon,
   MarathonIcon,
   OfferIcon,
@@ -8,11 +9,13 @@ import {
 import { COLOR } from "@/constants/color.constant";
 import { Languages } from "@/language";
 import { api } from "@/services/api";
+import { GetProfile, SignUp } from "@/services/user";
 import { useLanguage, useThemeMode } from "@/store/selectors";
 import { LanguageType, setLanguage } from "@/store/slices/language.slice";
 import { setSavedTickets } from "@/store/slices/saved_tickets.slice";
 import { setTickets } from "@/store/slices/ticket.slice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 import { Tabs, usePathname } from "expo-router";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -36,38 +39,68 @@ export default function TabScreen() {
     };
     setLang();
   }, []);
+  const getTicket = async () => {
+    Toast.info("Please wait");
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const { data, status } = await api.get("/api/ticket/findall", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      // await AsyncStorage.clear()
+      const answers = await AsyncStorage.getItem("answers");
+      const marathon = await AsyncStorage.getItem("marathon");
+      const savedTickets = await AsyncStorage.getItem("savedTickets");
+
+      if (status === 200) {
+        dispatch(
+          setTickets({
+            tickets: data.tickets,
+            answers: answers ? JSON.parse(answers) : [],
+            marathon: marathon ? JSON.parse(marathon) : [],
+          })
+        );
+        dispatch(setSavedTickets(savedTickets ? JSON.parse(savedTickets) : []));
+      }
+    } catch (err) {
+      const error = err as Error;
+      console.error(error);
+      await AsyncStorage.clear();
+      Toast.error(error.message);
+    }
+  };
 
   useEffect(() => {
-    const getTicket = async () => {
-      Toast.info("Please wait");
+    const SubmitTheToken = async () => {
       try {
-        const token = await AsyncStorage.getItem("token");
-        const { data, status } = await api.get("/api/ticket/findall", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const answers = await AsyncStorage.getItem("answers");
-        const marathon = await AsyncStorage.getItem("marathon");
-        const savedTickets = await AsyncStorage.getItem("savedTickets");
+        let token = await AsyncStorage.getItem("token");
 
-        if (status === 200) {
-          dispatch(
-            setTickets({
-              tickets: data.tickets,
-              answers: answers ? JSON.parse(answers) : [],
-              marathon: marathon ? JSON.parse(marathon) : {},
-            })
-          );
-          dispatch(
-            setSavedTickets(savedTickets ? JSON.parse(savedTickets) : [])
-          );
+        if (!token) {
+          const res = await SignUp();
+          if (res?.status === 201) {
+            token = res.data.token;
+            await AsyncStorage.setItem("token", token ? token : "");
+            Toast.success("Signup successful");
+          }
+        } else {
+          const res = await GetProfile(token);
+          if (res?.status !== 200) {
+            await AsyncStorage.clear();
+          }
+          await AsyncStorage.setItem("user", JSON.stringify(res?.data.user));
         }
-      } catch (err) {
-        const error = err as Error;
-        console.error(error);
-        Toast.error(error.message);
+      } catch (error) {
+        await AsyncStorage.clear();
+        if (axios.isAxiosError(error)) {
+          Toast.error(error.response?.data?.message || error.message);
+        } else {
+          Toast.error("Unexpected error occurred.");
+        }
+      } finally {
+        getTicket();
       }
     };
-    getTicket();
+
+    SubmitTheToken();
   }, []);
 
   const dark_mode = useThemeMode();
@@ -108,10 +141,10 @@ export default function TabScreen() {
         }}
       />
       <Tabs.Screen
-        name="offer"
+        name="bonus"
         options={{
-          title: MainLanguage.offer,
-          tabBarIcon: ({ color }) => <OfferIcon color={color} />,
+          title: MainLanguage.bonus,
+          tabBarIcon: ({ color }) => <BonusIcon color={color} />,
         }}
       />
       <Tabs.Screen

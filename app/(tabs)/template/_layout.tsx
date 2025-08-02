@@ -15,7 +15,7 @@ export default function Layout() {
       }
     };
 
-    if (answers.length > 0) {
+    if (answers?.length > 0 || []) {
       saveAnswers();
     }
   }, [answers]);

@@ -4,8 +4,9 @@ import { COLOR } from "@/constants/color.constant";
 import { Languages } from "@/language";
 import { useLanguage, useMarathon, useThemeMode } from "@/store/selectors";
 import { LanguageType } from "@/store/slices/language.slice";
+import { finishedtheMarathon } from "@/store/slices/ticket.slice";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import {
     ScrollView,
     StyleSheet,
@@ -14,21 +15,30 @@ import {
     View,
 } from "react-native";
 import * as Progress from "react-native-progress";
+import { useDispatch } from "react-redux";
 
 export default function Result() {
   const router = useRouter();
   const dark_mode = useThemeMode();
   const global_styles = createGlobalStyles(dark_mode);
   const styles = createStyles(dark_mode);
+  const dispatch = useDispatch()
 
   const language = useLanguage() as LanguageType;
   const Mainlanguage = Languages[language]["template"];
 
-  const marathon = useMarathon()
+  const marathons = useMarathon()
+  const marathon = marathons[marathons.length - 1]
 
   const totalQuestions = marathon.questions.length || 1;
   const correct = marathon?.used || 0;
   const score = Math.round((correct / totalQuestions) * 100);
+
+  useEffect(()=>{
+     if(correct >= 18){
+      dispatch(finishedtheMarathon({marathonId:marathon.id}))
+     }
+  },[])
 
   return (
     <ScrollView>
@@ -95,7 +105,7 @@ export default function Result() {
                   </Text>
                 </View>
               </View>
-              <TouchableOpacity style={styles.next_button}>
+              <TouchableOpacity style={styles.next_button} onPress={()=>router.push({pathname:"/(tabs)/marathon/all_result"})}>
                 <Text style={styles.next_button_text}>KEYINGI</Text>
               </TouchableOpacity>
             </View>

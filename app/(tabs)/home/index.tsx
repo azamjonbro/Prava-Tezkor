@@ -170,12 +170,12 @@ export default function Index() {
             </Text>
           </TouchableOpacity>
           <View style={style.department_line}></View>
-          <View style={style.department}>
+          <TouchableOpacity style={style.department} onPress={()=>route.push({pathname:"/(tabs)/home/saved"})}>
             <SaveIcon color={dark_mode ? COLOR.white: COLOR.black1} />
             <Text style={style.department_text}>
-              {MainLanguage["departments"]["saved"]}
+              {MainLanguage["departments"]["saved"]['title']}
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <Modal
           visible={modal}
