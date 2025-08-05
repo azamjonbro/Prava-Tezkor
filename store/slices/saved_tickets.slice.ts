@@ -7,7 +7,8 @@ export interface TicketAnswerI {
 }
 
 export interface SavedTicketI {
-  id: number;
+  _id: string;
+  id?: number;
   imgUrl: string;
   questions: {
     lotin: string;
@@ -30,7 +31,7 @@ const SavedTicketSlice = createSlice({
   initialState,
   reducers: {
     addTicketToSaved: (state, action: PayloadAction<SavedTicketI>) => {
-      state.push(action.payload);
+      state.push({...action.payload,id:state.length});
       return state;
     },
     removeTicketFromSaved: (

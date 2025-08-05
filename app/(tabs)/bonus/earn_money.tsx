@@ -133,7 +133,7 @@ export default function Earn_money() {
             style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
             onPress={() => router.push({ pathname: "/(tabs)/bonus" })}
           >
-            <NavigationArrowLeftIcon color="#fff" />
+            <NavigationArrowLeftIcon color={dark_mode ? COLOR.white : COLOR.dark_color} />
             <Text style={styles.navigation_title}>{MainLanguage["title"]}</Text>
           </TouchableOpacity>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
@@ -329,7 +329,7 @@ const createStyles = (dark_mode: boolean) =>
       marginTop: 24,
       fontSize: 18,
       fontWeight: 400,
-      color: dark_mode ? COLOR.white : COLOR.dark_color,
+      color: dark_mode ? COLOR.white : COLOR.white,
     },
     coin_number: {
       marginTop: 12,

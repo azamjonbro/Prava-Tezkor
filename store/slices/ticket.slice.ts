@@ -48,6 +48,7 @@ export interface TicketAnswersI {
 
 export interface MarathonQuestionI {
   // id: number;
+  _id: string;
   imgUrl: string;
   questions: {
     lotin: string;
@@ -64,7 +65,7 @@ export interface MarathonQuestionI {
 }
 
 export interface MarathonAnswersI {
-  questionId: number;
+  questionId: string;
   correct_answer: number;
 }
 
@@ -73,8 +74,8 @@ export interface MarathonI {
   used: number;
   rejected: number;
   questions: MarathonQuestionI[];
-  isFinished: boolean;
-  id: number;
+  // isFinished: boolean;
+  // id: number;
 }
 
 // Home test
@@ -114,14 +115,19 @@ export interface HomeTestI {
 export interface MainTicketI {
   tickets: BigTicketI[];
   answers: TicketAnswersI[];
-  marathon: MarathonI[];
+  marathon: MarathonI;
   home_test: HomeTestI;
 }
 
 const initialState: MainTicketI = {
   tickets: [],
   answers: [],
-  marathon: [],
+  marathon: {
+    answers: [],
+    used: 0,
+    rejected: 0,
+    questions: [],
+  },
   home_test: {
     answers: [],
     used: 0,
@@ -140,14 +146,29 @@ const TicketSlice = createSlice({
       const n = 10;
       let id = 0;
 
-      for (let i = 0; i <= payload.tickets.length; i += n) {
+      for (let i = 0; i < payload.tickets.length; i += n) {
         id++;
-        result.push({ children: payload.tickets.slice(i, i + n), id: id });
+        result.push({
+          children: payload.tickets.slice(i, i + n),
+          id,
+        });
       }
+
+      const shuffleArray = payload.tickets.flatMap(() => {
+        const randomNumber = Math.floor(Math.random() * result.length);
+        const group = result[randomNumber];
+        return group?.children?.map((child: any) => ({ ...child })) ?? [];
+      });
+
       return {
         tickets: result.filter((i) => i.children.length),
         answers: payload.answers,
-        marathon: payload.marathon,
+        marathon: {
+          used: payload.marathon.used || 0,
+          rejected: payload.marathon.rejected || 0,
+          questions: shuffleArray,
+          answers: payload.marathon.answers || [],
+        },
         home_test: state.home_test,
       };
     },
@@ -241,47 +262,39 @@ const TicketSlice = createSlice({
         }),
       };
     },
-    deleteticketTest: (state,{payload}:PayloadAction<{ticketId:number}>)=>{
-      state.answers = state.answers.filter((i)=>{
-        return i.ticketId !== payload.ticketId
-      })
-      return state
+    deleteticketTest: (
+      state,
+      { payload }: PayloadAction<{ ticketId: number }>
+    ) => {
+      state.answers = state.answers.filter((i) => {
+        return i.ticketId !== payload.ticketId;
+      });
+      return state;
     },
     addMarathonTest: (state, _) => {
       // let n = 0;
-      const shuffleArray = state.tickets.flatMap(() => {
-        const randomNumber = Math.floor(Math.random() * state.tickets.length);
-        return state.tickets[randomNumber].children.map((child) => ({
-          ...child,
-          // id: ++n,
-        }));
-      });
 
-      state.marathon.push({
-        answers: [],
-        used: 0,
-        rejected: 0,
-        questions: shuffleArray.slice(0, 20),
-        isFinished: false,
-        id: state.marathon.length + 1,
-      });
+      if (state.marathon.used === 0 || state.marathon.rejected == 0) {
+        state.marathon = {
+          answers: [],
+          used: 0,
+          rejected: 0,
+          questions: state.marathon.questions,
+        };
+      }
       return state;
     },
     answerTheQuestionMarathon: (
       state,
-      action: PayloadAction<{ marathonId: number; answer: MarathonAnswersI }>
+      action: PayloadAction<{ answer: MarathonAnswersI }>
     ) => {
-      const { marathonId, answer } = action.payload;
-
-      const marathon = state.marathon.find((m) => m.id === marathonId);
-      if (!marathon) {
-        console.warn(`Marathon not found: id=${marathonId}`);
-        return state;
-      }
+      const { answer } = action.payload;
 
       const { questionId, correct_answer } = answer;
 
-      const question = marathon.questions[questionId]
+      const question = state.marathon.questions.find(
+        (i) => i._id === questionId
+      );
       if (!question) {
         console.warn("Question not found in marathon");
         return state;
@@ -289,46 +302,63 @@ const TicketSlice = createSlice({
 
       const isCorrect = question.correct_answer === correct_answer;
 
-      const existingIndex = marathon.answers.findIndex(
+      const existingIndex = state.marathon.answers.findIndex(
         (i) => i.questionId === questionId
       );
 
       if (existingIndex !== -1) {
-        const prevAnswer = marathon.answers[existingIndex];
+        const prevAnswer = state.marathon.answers[existingIndex];
         const wasCorrect =
           question.correct_answer === prevAnswer.correct_answer;
 
         if (wasCorrect && !isCorrect) {
-          marathon.used = Math.max(0, marathon.used - 1);
-          marathon.rejected += 1;
+          state.marathon.used = Math.max(0, state.marathon.used - 1);
+          state.marathon.rejected += 1;
         } else if (!wasCorrect && isCorrect) {
-          marathon.used += 1;
-          marathon.rejected = Math.max(0, marathon.rejected - 1);
+          state.marathon.used += 1;
+          state.marathon.rejected = Math.max(0, state.marathon.rejected - 1);
         }
 
-        marathon.answers[existingIndex] = answer;
+        state.marathon.answers[existingIndex] = answer;
       } else {
-        marathon.answers.push(answer);
+        state.marathon.answers.push(answer);
         if (isCorrect) {
-          marathon.used += 1;
+          state.marathon.used += 1;
         } else {
-          marathon.rejected += 1;
+          state.marathon.rejected += 1;
         }
       }
 
       return state;
     },
+    clearMarathon: (state, _) => {
+      const allQuestions = state.tickets.flatMap(
+        (ticket: any) =>
+          ticket.children?.map((child: any) => ({ ...child })) ?? []
+      );
 
-    finishedtheMarathon: (
-      state,
-      { payload }: PayloadAction<{ marathonId: number }>
-    ) => {
-      state.marathon = state.marathon.map((i) => {
-        if (i.id === payload.marathonId) {
-          return { ...i, isFinished: true };
-        }
-        return i;
-      });
+      for (let i = allQuestions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
+      }
+
+      state.marathon = {
+        answers: [],
+        used: 0,
+        rejected: 0,
+        questions: allQuestions,
+      };
+
+      return state;
+    },
+
+    saveMarathon: (state, _) => {
+      const answeredIds = new Set(
+        state.marathon.answers.map((a) => a.questionId)
+      );
+      state.marathon.questions = state.marathon.questions.filter(
+        (q) => !answeredIds.has(q._id)
+      );
       return state;
     },
     setHomeTest: (state, { payload }: PayloadAction<{ limit: number }>) => {
@@ -377,6 +407,7 @@ export const {
   answerTheQuestionMarathon,
   setHomeTest,
   answerToHomeTest,
-  finishedtheMarathon,
+  clearMarathon,
+  saveMarathon,
 } = TicketSlice.actions;
 export default TicketSlice.reducer;

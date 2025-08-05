@@ -65,7 +65,7 @@ export default function Payment() {
             style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
             onPress={() => router.push({pathname:"/(tabs)/bonus"})}
           >
-            <NavigationArrowLeftIcon color="#fff" />
+            <NavigationArrowLeftIcon color={dark_mode ? COLOR.white : COLOR.dark_color}/>
             <Text style={styles.navigation_title}>{MainLanguage["title"]}</Text>
           </TouchableOpacity>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
@@ -190,12 +190,12 @@ const createStyles = (dark_mode: boolean) =>
     line: {
       width: "100%",
       height: 1,
-      backgroundColor: dark_mode ? COLOR.white : COLOR.dark_color,
+      backgroundColor: dark_mode ? COLOR.white : COLOR.white,
       marginTop: 9,
     },
     nothing_text: {
       textAlign: "center",
-      color: dark_mode ? COLOR.white : COLOR.dark_color,
+      color: dark_mode ? COLOR.white : COLOR.white,
       fontWeight: "regular",
       marginTop: 12,
     },

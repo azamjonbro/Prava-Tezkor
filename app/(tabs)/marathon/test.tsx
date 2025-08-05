@@ -1,5 +1,9 @@
 import { createGlobalStyles } from "@/assets/styles/global.style";
-import { NavigationArrowLeftIcon } from "@/assets/svgs/icon";
+import {
+  ArchiveIcon,
+  FlagIcon,
+  NavigationArrowLeftIcon,
+} from "@/assets/svgs/icon";
 import { COLOR } from "@/constants/color.constant";
 import { BASE_URL } from "@/constants/index.constants";
 import { Languages } from "@/language";
@@ -7,15 +11,22 @@ import {
   useLanguage,
   useMarathon,
   usePro,
+  useSavedTickets,
   useThemeMode,
 } from "@/store/selectors";
 import { LanguageType } from "@/store/slices/language.slice";
 import {
+  addTicketToSaved,
+  removeTicketFromSaved,
+} from "@/store/slices/saved_tickets.slice";
+import {
   addMarathonTest,
   answerTheQuestionMarathon,
+  clearMarathon,
+  saveMarathon,
 } from "@/store/slices/ticket.slice";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   FlatList,
   Image,
@@ -31,70 +42,39 @@ import { useDispatch } from "react-redux";
 export default function Test() {
   const router = useRouter();
   const dark_mode = useThemeMode();
-  const marathons = useMarathon();
+  const marathon = useMarathon();
   const language = useLanguage() as LanguageType;
-  const [timer, setTimer] = useState<number>(25 * 60);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
   const pro = usePro();
-  const [isErrors, setIsErrors] = useState(false);
-  const [disabledInput, setDisabledInput] = useState(false);
-  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
   const global_styles = createGlobalStyles(dark_mode);
   const styles = createStyles(dark_mode);
-  const marathon = marathons[marathons.length - 1];
+  const [currentQuestion, setCurrentQuestion] = useState(0);
   const question = marathon?.questions[currentQuestion];
   const Mainlanguage = Languages[language]["marathon"];
   const dispatch = useDispatch();
+  const saved_tickets = useSavedTickets();
+  const [disabledInput, setDisabledInput] = useState(false);
+  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
+  const [finish, setFinish] = useState(false);
 
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
-    const s = (seconds % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
-  };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimer((prev) => {
-        if (prev <= 1) {
-          router.push({
-            pathname: "/marathon/result",
-          });
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    if (marathon?.rejected === 5) {
-      setIsErrors(true);
-    }
-  }, [marathon.answers]);
 
   const normalizeUrl = (base: string, path: string) => {
     const cleanPath = path.replace(/^\.?\//, "");
     return `${base.replace(/\/$/, "")}/${cleanPath}`;
   };
 
-  const handleNext = (index: number) => {
+  const handleNext = (_id:string,index:number) => {
     const alreadyAnswered = marathon.answers.find(
-      (i) => i.questionId === currentQuestion
+      (i) => i.questionId === _id
     );
 
     if (alreadyAnswered) return;
 
     dispatch(
       answerTheQuestionMarathon({
-        marathonId: marathon.id,
         answer: {
           correct_answer: index + 1,
-          questionId: currentQuestion,
+          questionId: _id,
         },
       })
     );
@@ -106,8 +86,7 @@ export default function Test() {
     setTimeout(() => {
       if (nextQuestionIndex >= marathon.questions.length) {
         router.push({ pathname: "/marathon/result" });
-      }
-      else {
+      } else {
         setCurrentQuestion(nextQuestionIndex);
       }
 
@@ -115,6 +94,16 @@ export default function Test() {
       setShowCorrectAnswer(false);
     }, 3000);
   };
+
+  const this_ticket = useMemo(() => {
+    return saved_tickets.find((i) => i.id == currentQuestion);
+  }, [currentQuestion, saved_tickets]);
+
+  if(!question){
+    return <View>
+      <Text>Not found</Text>
+    </View>
+  }
 
   return (
     <ScrollView>
@@ -130,51 +119,41 @@ export default function Test() {
             style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
             onPress={() => router.back()}
           >
-            <NavigationArrowLeftIcon color="#fff" />
+            <NavigationArrowLeftIcon color={dark_mode ? COLOR.white : COLOR.dark}/>
             <Text style={styles.navigation_title}>
-              {Mainlanguage["marathon_title"]} - {marathons.length}
+              {Mainlanguage["marathon_title"]}
             </Text>
           </TouchableOpacity>
-          <View style={styles.timer}>
-            <Text style={styles.timer_text}>{formatTime(timer)}</Text>
-          </View>
-        </View>
 
-        <View style={styles.question_number_list}>
-          <FlatList
-            data={marathon.questions}
-            horizontal
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item, index }) => {
-              const ans = marathon.answers.find((i) => i.questionId === index);
-              return (
-                <TouchableOpacity
-                  style={[
-                    styles.question_number,
-                    ans
-                      ? ans.correct_answer === item.correct_answer
-                        ? styles.question_number_green_color
-                        : styles.question_number_red_color
-                      : styles.question_number_default_color,
-                  ]}
-                  onPress={() => {
-                    if (!showCorrectAnswer) {
-                      setCurrentQuestion(index);
-                    }
-                  }}
-                >
-                  <Text
-                    style={{
-                      ...styles.question_number_text,
-                    }}
-                  >
-                    {index + 1}
-                  </Text>
-                </TouchableOpacity>
-              );
-            }}
-            ItemSeparatorComponent={() => <View style={{ width: 6 }}></View>}
-          />
+          <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+            <TouchableOpacity onPress={() => setFinish(true)}>
+              <FlagIcon color={dark_mode ? "#D0D0D0" : COLOR.dark} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                if (this_ticket) {
+                  dispatch(
+                    removeTicketFromSaved({ ticketId: currentQuestion })
+                  );
+                } else {
+                  dispatch(
+                    addTicketToSaved({
+                      ...question,
+                      _id: question._id,
+                    })
+                  );
+                }
+              }}
+            >
+              <ArchiveIcon color={this_ticket ? COLOR.green : dark_mode ? "#D0D0D0" : COLOR.dark} />
+            </TouchableOpacity>
+            <View style={[styles.view, styles.used_view]}>
+              <Text style={{ color: COLOR.white }}>{marathon.used}</Text>
+            </View>
+            <View style={[styles.view, styles.rejected_view]}>
+              <Text style={{ color: COLOR.white }}>{marathon.rejected}</Text>
+            </View>
+          </View>
         </View>
 
         <View style={styles.question_cont}>
@@ -200,7 +179,7 @@ export default function Test() {
           <View>
             {question.answers.map((item, index) => {
               const answer = marathon.answers.find(
-                (i) => i.questionId === currentQuestion
+                (i) => i.questionId === question._id
               );
               const isSelected = answer?.correct_answer === index + 1;
               const isCorrect = question.correct_answer === index + 1;
@@ -217,7 +196,7 @@ export default function Test() {
                     isSelected && isCorrect ? styles.green_answer_text : {},
                   ]}
                   disabled={disabledInput}
-                  onPress={() => handleNext(index)}
+                  onPress={() => handleNext(question._id,index)}
                 >
                   <Text style={styles.answer_text}>
                     {item[language as LanguageType]}
@@ -237,28 +216,30 @@ export default function Test() {
         </View>
       </View>
       <Modal
-        visible={isErrors}
+        visible={finish}
         animationType="fade"
         transparent={true}
         onRequestClose={() => {
-          setIsErrors(false);
+          setFinish(false);
         }}
       >
         <View style={styles.modalBackground}>
           <View style={styles.modalContent}>
             <Text style={styles.modal_title}>
-              {Languages[language]["modals"]["too_many_errors_title"]}
+              {Languages[language]["modals"]["marathon"]['title']}
             </Text>
             <View style={{ alignItems: "center", justifyContent: "center" }}>
               <Text style={styles.modal_description}>
-                {Languages[language]["modals"]["try_again_question"]}
+                {Languages[language]["modals"]["marathon"]['description']}
               </Text>
             </View>
             <View style={styles.modal_btns}>
               <TouchableOpacity
                 style={styles.modal_btn_no}
                 onPress={() => {
-                  setIsErrors(false);
+                  router.push({pathname:"/(tabs)/marathon"})
+                  setFinish(false);
+                  dispatch(clearMarathon({}))
                 }}
               >
                 <Text style={styles.modal_btn_no_text}>
@@ -268,10 +249,9 @@ export default function Test() {
               <TouchableOpacity
                 style={styles.modal_btn_yes}
                 onPress={() => {
-                  setIsErrors(false);
-                  dispatch(addMarathonTest({}));
-                  setCurrentQuestion(0);
-                  setTimer(25 * 60);
+                  setFinish(false);
+                  router.push({pathname:"/(tabs)/marathon"})
+                  dispatch(saveMarathon({}))
                 }}
               >
                 <Text style={styles.modal_btn_yes_text}>
@@ -300,6 +280,19 @@ const createStyles = (dark_mode: boolean) =>
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 5,
+    },
+    view: {
+      width: 36,
+      height: 24,
+      borderRadius: 10,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    used_view: {
+      backgroundColor: COLOR.green,
+    },
+    rejected_view: {
+      backgroundColor: COLOR.red,
     },
     timer_text: {
       fontSize: 18,

@@ -57,7 +57,7 @@ export default function TabScreen() {
           setTickets({
             tickets: data.tickets,
             answers: answers ? JSON.parse(answers) : [],
-            marathon: marathon ? JSON.parse(marathon) : [],
+            marathon: marathon ? JSON.parse(marathon) : {},
           })
         );
         dispatch(setSavedTickets(savedTickets ? JSON.parse(savedTickets) : []));
@@ -72,7 +72,7 @@ export default function TabScreen() {
         token = res.data.token;
         await AsyncStorage.setItem("token", token ? token : "");
         Toast.success("Signup successful");
-        getTicket()
+        getTicket();
       }
 
       Toast.error(error.message);
@@ -128,7 +128,10 @@ export default function TabScreen() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: dark_mode ? COLOR.dark2 : "white",
-          display: !["/template/ticket-test",'/template/template-detail'].includes(pathname)
+          display: ![
+            "/template/ticket-test",
+            "/template/template-detail",
+          ].includes(pathname)
             ? "flex"
             : "none",
         },

@@ -37,6 +37,7 @@ export default function templateDetail() {
 
   const dark_mode = useThemeMode();
   const global_styles = createGlobalStyles(dark_mode);
+  const styles = createStyles(dark_mode)
   const ticketIds = ticket.map((i) => i.id);
   const answer = answers.filter((i) => ticketIds.includes(i.ticketId))
   const used = answer.reduce((acc, item) => acc + item.used, 0);
@@ -51,7 +52,7 @@ export default function templateDetail() {
           style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
           onPress={() => router.push({pathname:"/template"})}
         >
-          <NavigationArrowLeftIcon color="#fff" />
+          <NavigationArrowLeftIcon color={dark_mode ? COLOR.white : COLOR.dark} />
           <Text style={styles.navigation_title}>{Mainlanguage["title"]}</Text>
         </TouchableOpacity>
       </View>
@@ -122,7 +123,8 @@ export default function templateDetail() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (dark_mode:boolean)=>(
+  StyleSheet.create({
   container_header: {
     display: "flex",
     alignItems: "center",
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
   navigation_title: {
     fontSize: 24,
     fontWeight: 400,
-    color: COLOR.white,
+    color: dark_mode ? COLOR.white : COLOR.dark,
   },
   statistic_cont: {
     width: "100%",
@@ -199,4 +201,5 @@ const styles = StyleSheet.create({
   ticket_result_text_red: {
     color: COLOR.red,
   },
-});
+})
+)

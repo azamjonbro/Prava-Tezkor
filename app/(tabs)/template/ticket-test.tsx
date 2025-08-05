@@ -47,6 +47,8 @@ export default function ticketTest() {
   const answers = useTicketAnswers();
   const dispatch = useDispatch();
   const [isFinished, setFinished] = useState(false);
+  const [disabledInput, setDisabledInput] = useState(false);
+  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
   const [timer, setTimer] = useState<number>(15 * 60);
   const saved_tickets = useSavedTickets();
 
@@ -69,7 +71,9 @@ export default function ticketTest() {
   }, []);
 
   const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+    const m = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, "0");
     const s = (seconds % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   };
@@ -98,6 +102,37 @@ export default function ticketTest() {
     () => answers.find((i) => i.ticketId == +id),
     [answers, id]
   );
+  if (!answer) return null;
+
+  const handleAnswerPress = (index: number) => {
+    const alreadyAnswered = answer.answers.find(
+      (i) => i.questionId === currentQuestion
+    );
+
+    if (alreadyAnswered) return;
+
+    const nextQuestionIndex = currentQuestion + 1;
+    dispatch(
+      addNewAnswerTicketTest({
+        ticketId: +id,
+        questionId: currentQuestion,
+        correct_answer: index + 1,
+      })
+    );
+
+    setDisabledInput(true);
+    setShowCorrectAnswer(true);
+
+    setTimeout(() => {
+      if (nextQuestionIndex >= ticket.length) {
+        router.push({ pathname: "/home/result" });
+      } else {
+        setCurrentQuestion(nextQuestionIndex);
+      }
+      setDisabledInput(false);
+      setShowCorrectAnswer(false);
+    }, 3000);
+  };
 
   const this_ticket = useMemo(() => {
     return saved_tickets.find((i) => i.id == +id + currentQuestion);
@@ -107,6 +142,8 @@ export default function ticketTest() {
     const cleanPath = path.replace(/^\.?\//, "");
     return `${base.replace(/\/$/, "")}/${cleanPath}`;
   };
+
+  const styles = createStyles(dark_mode)
 
   return (
     <ScrollView
@@ -118,7 +155,9 @@ export default function ticketTest() {
             style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
             onPress={() => router.back()}
           >
-            <NavigationArrowLeftIcon color="#fff" />
+            <NavigationArrowLeftIcon
+              color={dark_mode ? COLOR.white : COLOR.dark}
+            />
             {id ? (
               <Text style={styles.navigation_title}>
                 {Languages[language]["template"]["title"]} - {id}
@@ -137,11 +176,7 @@ export default function ticketTest() {
                   <Text style={styles.modal_title}>
                     {Languages[language]["modals"]["finish_ticket_warning"]}
                     <Text style={{ color: COLOR.red }}>
-                      {
-                        Languages[language]["modals"][
-                          "finish_ticket_question"
-                        ]
-                      }
+                      {Languages[language]["modals"]["finish_ticket_question"]}
                     </Text>
                   </Text>
                   <View style={styles.modal_btns}>
@@ -172,7 +207,7 @@ export default function ticketTest() {
               </View>
             </Modal>
             <TouchableOpacity onPress={() => setFinished(true)}>
-              <FlagIcon color="#D0D0D0" />
+              <FlagIcon color={dark_mode ? "#D0D0D0" : COLOR.dark} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
@@ -187,9 +222,7 @@ export default function ticketTest() {
                 }
               }}
             >
-              <ArchiveIcon
-                color={this_ticket ? COLOR.green : "#D0D0D0"}
-              />
+              <ArchiveIcon color={this_ticket ? COLOR.green : dark_mode ? "#D0D0D0" : COLOR.dark} />
             </TouchableOpacity>
             <View style={styles.container_header_timer}>
               <Text style={styles.container_header_timer_text}>
@@ -203,9 +236,10 @@ export default function ticketTest() {
           <FlatList
             data={ticket}
             horizontal
+            showsHorizontalScrollIndicator={false}
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item, index }) => {
-              const ans = answer?.answers.find((i)=>i.questionId == index)
+              const ans = answer?.answers.find((i) => i.questionId == index);
               return (
                 <TouchableOpacity
                   style={[
@@ -216,7 +250,11 @@ export default function ticketTest() {
                         : styles.question_number_red_color
                       : styles.question_number_default_color,
                   ]}
-                  onPress={() => setCurrentQuestion(index)}
+                  onPress={() => {
+                    if (!showCorrectAnswer) {
+                      setCurrentQuestion(index);
+                    }
+                  }}
                 >
                   <Text
                     style={{
@@ -256,39 +294,28 @@ export default function ticketTest() {
 
           <View>
             {question.answers.map((item, index) => {
+              const ans = answer.answers.find(
+                (i) => i.questionId === currentQuestion
+              );
+              const isSelected = ans?.correct_answer === index + 1;
+              const isCorrect = question.correct_answer === index + 1;
+
+              const showCorrect = showCorrectAnswer && isCorrect;
+              const showIncorrect = isSelected && !isCorrect;
+
               return (
                 <TouchableOpacity
-                  style={styles.answer}
                   key={index}
-                  onPress={() => {
-                    const nextQuestionIndex = currentQuestion + 1;
-                    const ans = answer?.answers.find(
-                      (i) => i.questionId == currentQuestion
-                    );
-
-                    if (!ans) {
-                      dispatch(
-                        addNewAnswerTicketTest({
-                          ticketId: +id,
-                          correct_answer: index + 1,
-                          questionId: currentQuestion,  
-                        })
-                      );
-                    }
-
-                    if (nextQuestionIndex >= ticket.length) {
-                      router.push({
-                        pathname: "/template/ticket-test-result",
-                        params: { id },
-                      });
-                    } else {
-                      setCurrentQuestion(nextQuestionIndex);
-                    }
-                  }}
+                  style={[
+                    styles.answer,
+                    showCorrect ? styles.green_answer_text : {},
+                    showIncorrect ? styles.red_answer_text : {},
+                    isSelected && isCorrect ? styles.green_answer_text : {},
+                  ]}
+                  disabled={disabledInput}
+                  onPress={() => handleAnswerPress(index)}
                 >
-                  <Text style={styles.answer_text}>
-                    {item[language]}
-                  </Text>
+                  <Text style={styles.answer_text}>{item[language]}</Text>
                 </TouchableOpacity>
               );
             })}
@@ -309,165 +336,171 @@ export default function ticketTest() {
   );
 }
 
-const styles = StyleSheet.create({
-  container_header: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexDirection: "row",
-    paddingTop: 40,
-  },
-  navigation_title: {
-    fontSize: 24,
-    fontWeight: 400,
-    color: COLOR.white,
-  },
-  container_header_right: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: 8,
-  },
-  container_header_timer: {
-    width: 68,
-    height: 32,
-    backgroundColor: COLOR.gray4,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 5,
-  },
-  container_header_timer_text: {
-    fontSize: 18,
-    color: COLOR.white,
-    fontWeight: 400,
-  },
-  question_number_list: {
-    backgroundColor: COLOR.black1,
-    marginTop: 20,
-    padding: 7,
-    borderRadius: 10,
-  },
-  question_number: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  question_number_text: {
-    fontSize: 16,
-    color:COLOR.white
-  },
-  question_number_default_color: {
-    backgroundColor: COLOR.gray3,
-  },
-  question_number_red_color: {
-    backgroundColor: COLOR.red,
-    color: COLOR.white,
-  },
-  question_number_green_color: {
-    backgroundColor: COLOR.green,
-    color: COLOR.white,
-  },
-  question_cont: {
-    width: "100%",
-    height: "70%",
-    backgroundColor: COLOR.black1,
-    marginTop: 16,
-    padding: 8,
-    borderRadius: 10,
-  },
-  question_cont_text: {
-    color: COLOR.white,
-    fontSize: 14,
-  },
-  default_img: {
-    width: "100%",
-    height: 180,
-    backgroundColor: COLOR.gray3,
-    borderRadius: 10,
-    marginTop: 15,
-  },
-  answers: {
-    marginTop: 5,
-    flexDirection: "column",
-  },
-  answer: {
-    width: "100%",
-    padding:8,
-    borderWidth: 1,
-    marginTop: 10,
-    borderColor: COLOR.white,
-    borderRadius: 10,
-    justifyContent: "center",
-    paddingStart: 12,
-  },
-  answer_text: {
-    color: COLOR.white,
-    fontSize: 16,
-  },
-  comment_text: {
-    color: COLOR.white,
-    fontSize: 12,
-    marginTop: 14,
-  },
-  ads_cont: {
-    width: "100%",
-    height: "15%",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: COLOR.gray3,
-    marginTop: 22,
-    borderRadius: 10,
-    marginBottom: 22,
-  },
-  ads_cont_text: {
-    fontSize: 24,
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    backgroundColor: COLOR.white2,
-    paddingBottom: 40,
-  },
-  modalContent: {
-    width: 300,
-    padding: 8,
-    backgroundColor: "white",
-    borderRadius: 10,
-  },
-  modal_title: {
-    fontSize: 16,
-    fontWeight: 400,
-  },
-  modal_btns: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 32,
-  },
-  modal_btn_no: {
-    width: "40%",
-    height: 36,
-    backgroundColor: COLOR.red,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 10,
-  },
-  modal_btn_no_text: {
-    fontSize: 16,
-    color: COLOR.white,
-  },
-  modal_btn_yes: {
-    width: "40%",
-    height: 36,
-    backgroundColor: COLOR.green,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 10,
-  },
-  modal_btn_yes_text: {
-    fontSize: 16,
-    color: COLOR.white,
-  },
-});
+const createStyles = (dark_mode: boolean) =>
+  StyleSheet.create({
+    container_header: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      flexDirection: "row",
+    },
+    navigation_title: {
+      fontSize: 24,
+      fontWeight: 400,
+      color: dark_mode ? COLOR.white : COLOR.dark,
+    },
+    container_header_right: {
+      alignItems: "center",
+      flexDirection: "row",
+      gap: 8,
+    },
+    container_header_timer: {
+      width: 68,
+      height: 32,
+      backgroundColor: COLOR.gray4,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 5,
+    },
+    container_header_timer_text: {
+      fontSize: 18,
+      color: COLOR.white,
+      fontWeight: 400,
+    },
+    question_number_list: {
+      backgroundColor: COLOR.black1,
+      marginTop: 20,
+      padding: 7,
+      borderRadius: 10,
+    },
+    question_number: {
+      width: 40,
+      height: 40,
+      borderRadius: 10,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    question_number_text: {
+      fontSize: 16,
+      color: COLOR.white,
+    },
+    question_number_default_color: {
+      backgroundColor: COLOR.gray,
+    },
+    question_number_red_color: {
+      backgroundColor: COLOR.red,
+      color: COLOR.white,
+    },
+    question_number_green_color: {
+      backgroundColor: COLOR.green,
+      color: COLOR.white,
+    },
+    question_cont: {
+      width: "100%",
+      height: "70%",
+      backgroundColor: COLOR.black1,
+      marginTop: 16,
+      padding: 8,
+      borderRadius: 10,
+    },
+    question_cont_text: {
+      color: COLOR.white,
+      fontSize: 14,
+    },
+    default_img: {
+      width: "100%",
+      height: 180,
+      backgroundColor: COLOR.gray3,
+      borderRadius: 10,
+      marginTop: 15,
+    },
+    answers: {
+      marginTop: 5,
+      flexDirection: "column",
+    },
+    answer: {
+      width: "100%",
+      padding: 8,
+      borderWidth: 1,
+      marginTop: 10,
+      borderColor: COLOR.white,
+      borderRadius: 10,
+      justifyContent: "center",
+      paddingStart: 12,
+    },
+    answer_text: {
+      color: COLOR.white,
+      fontSize: 16,
+    },
+    comment_text: {
+      color: COLOR.white,
+      fontSize: 12,
+      marginTop: 14,
+    },
+    ads_cont: {
+      width: "100%",
+      height: "15%",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: COLOR.gray3,
+      marginTop: 22,
+      borderRadius: 10,
+      marginBottom: 22,
+    },
+    ads_cont_text: {
+      fontSize: 24,
+    },
+    modalBackground: {
+      flex: 1,
+      justifyContent: "flex-end",
+      alignItems: "center",
+      backgroundColor: COLOR.white2,
+      paddingBottom: 40,
+    },
+    modalContent: {
+      width: 300,
+      padding: 8,
+      backgroundColor: "white",
+      borderRadius: 10,
+    },
+    modal_title: {
+      fontSize: 16,
+      fontWeight: 400,
+    },
+    modal_btns: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginTop: 32,
+    },
+    modal_btn_no: {
+      width: "40%",
+      height: 36,
+      backgroundColor: COLOR.red,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 10,
+    },
+    modal_btn_no_text: {
+      fontSize: 16,
+      color: COLOR.white,
+    },
+    modal_btn_yes: {
+      width: "40%",
+      height: 36,
+      backgroundColor: COLOR.green,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 10,
+    },
+    modal_btn_yes_text: {
+      fontSize: 16,
+      color: COLOR.white,
+    },
+    green_answer_text: {
+      backgroundColor: COLOR.green,
+    },
+    red_answer_text: {
+      backgroundColor: COLOR.red,
+    },
+  });

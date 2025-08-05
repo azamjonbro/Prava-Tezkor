@@ -132,6 +132,10 @@ export const Languages = {
         credit_card_input: "Karta raqamingizni kiriting",
         name_input: "Ism familiya kiriting",
       },
+      marathon: {
+        title: "Savolni tugatishni hohlaysizmi?",
+        description: "natijalar saqlanib qoladi?",
+      },
     },
   },
   rus: {
@@ -267,6 +271,10 @@ export const Languages = {
         credit_card_input: "Введите номер вашей карты",
         name_input: "Введите имя и фамилию",
       },
+      marathon: {
+        title: "Вы хотите завершить вопрос?",
+        description: "результаты будут сохранены?",
+      },
     },
   },
   krill: {
@@ -401,6 +409,10 @@ export const Languages = {
         description: "Сиздан карта рақамини киритишингизни сўраймиз.",
         credit_card_input: "Карта рақамингизни киритинг",
         name_input: "Исм фамилия киритинг",
+      },
+      marathon: {
+        title: "Саволни тугатишни хоҳлайсизми?",
+        description: "натижалар сақланиб қоладими?",
       },
     },
   },

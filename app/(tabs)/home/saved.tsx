@@ -34,7 +34,7 @@ export default function Saved() {
         </TouchableOpacity>
         {saved_tickets.map((i, index) => {
           return (
-            <View style={styles.question}>
+            <View style={styles.question} key={index}>
               <Text style={styles.question_title}>
                 {index + 1}-{MainLanguage["question"]}
               </Text>

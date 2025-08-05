@@ -26,18 +26,16 @@ export default function Marathon() {
   const dark_mode = useThemeMode();
   const language = useLanguage();
   const marathon = useMarathon();
-  const answers = marathon.reduce((a, b) => a + b.answers.length, 0);
   const dispatch = useDispatch();
-  const tickets = useTickets();
 
   const global_styles = createGlobalStyles(dark_mode);
   const styles = createStyles(dark_mode);
 
   const MainLanguage = Languages[language as LanguageType]["marathon"];
 
-  const totalQuestions = tickets?.length || 20;
-  const used = marathon.reduce((a, b) => a + b.used, 0) || 0;
-  const rejected = marathon.reduce((a, b) => a + b.rejected, 0) || 0;
+  const totalQuestions = marathon?.questions?.length || 0;
+  const used = marathon.used || 0;
+  const rejected = marathon.rejected || 0;
   const score = Math.round((used / totalQuestions) * 100);
   return (
     <ScrollView style={{ paddingBottom: 15 }}>

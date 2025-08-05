@@ -116,7 +116,7 @@ export default function Index() {
               dispatch(setHomeTest({ limit: 20 }));
             }}
           >
-            <ExamIcon color={dark_mode ? COLOR.white: COLOR.black1} />
+            <ExamIcon color={COLOR.white} />
             <Text style={style.department_text}>
               {MainLanguage["departments"]["exam20"]}
             </Text>
@@ -135,7 +135,7 @@ export default function Index() {
               dispatch(setHomeTest({ limit: 10 }));
             }}
           >
-            <TemplateIcon color={dark_mode ? COLOR.white: COLOR.black1} />
+            <TemplateIcon color={COLOR.white} />
             <Text style={style.department_text}>
               {MainLanguage["departments"]["exam10"]}
             </Text>
@@ -145,7 +145,7 @@ export default function Index() {
             style={style.department}
             onPress={() => route.push({ pathname: "/marathon" })}
           >
-            <Marathon2Icon color={dark_mode ? COLOR.white: COLOR.black1} />
+            <Marathon2Icon color={COLOR.white} />
             <Text style={style.department_text}>
               {MainLanguage["departments"]["marathon"]}
             </Text>
@@ -164,16 +164,19 @@ export default function Index() {
               dispatch(setHomeTest({ limit: 10 }));
             }}
           >
-            <RandomIcon color={dark_mode ? COLOR.white: COLOR.black1} />
+            <RandomIcon color={COLOR.white} />
             <Text style={style.department_text}>
               {MainLanguage["departments"]["random"]}
             </Text>
           </TouchableOpacity>
           <View style={style.department_line}></View>
-          <TouchableOpacity style={style.department} onPress={()=>route.push({pathname:"/(tabs)/home/saved"})}>
-            <SaveIcon color={dark_mode ? COLOR.white: COLOR.black1} />
+          <TouchableOpacity
+            style={style.department}
+            onPress={() => route.push({ pathname: "/(tabs)/home/saved" })}
+          >
+            <SaveIcon color={COLOR.white} />
             <Text style={style.department_text}>
-              {MainLanguage["departments"]["saved"]['title']}
+              {MainLanguage["departments"]["saved"]["title"]}
             </Text>
           </TouchableOpacity>
         </View>
@@ -270,7 +273,7 @@ const createStyles = (dark_mode: boolean) =>
     banner_text: {
       fontSize: 20,
       fontWeight: "700",
-      color: dark_mode?COLOR.white: COLOR.black1,
+      color: dark_mode ? COLOR.white : COLOR.black1,
     },
 
     departments_title: {
@@ -281,7 +284,7 @@ const createStyles = (dark_mode: boolean) =>
     },
     departments_wrapper: {
       width: "100%",
-      backgroundColor: dark_mode?COLOR.black2:COLOR.dark_bg,
+      backgroundColor: dark_mode ? COLOR.black2 : COLOR.dark_bg,
       borderRadius: 10,
     },
     department: {
@@ -292,18 +295,18 @@ const createStyles = (dark_mode: boolean) =>
     },
     department_text: {
       fontSize: 14,
-      color: dark_mode?COLOR.white:COLOR.dark,
+      color: COLOR.white,
     },
     department_line: {
       width: "100%",
       height: 1,
-      backgroundColor: dark_mode?COLOR.white3:COLOR.dark_color,
+      backgroundColor: COLOR.white,
     },
     modalBackground: {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: dark_mode?COLOR.black1: COLOR.white2,
+      backgroundColor: dark_mode ? COLOR.black1 : COLOR.white2,
     },
     modalContent: {
       width: 300,

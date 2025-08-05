@@ -30,7 +30,6 @@ export default function Test() {
   const styles = createStyles(dark_mode);
   const global_styles = createGlobalStyles(dark_mode);
   const [timer, setTimer] = useState<number>(15 * 60);
-  const param = useLocalSearchParams() as { type: string; limit: string };
   const language = useLanguage() as LanguageType;
   const home_test = useHomeTest();
   const pro = usePro();
@@ -111,7 +110,7 @@ export default function Test() {
             style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
             onPress={() => router.back()}
           >
-            <NavigationArrowLeftIcon color="#fff" />
+            <NavigationArrowLeftIcon color={dark_mode ? COLOR.white : COLOR.dark} />
             <Text style={styles.navigation_title}>
               {Languages[language]["template"]["title"]}
             </Text>
@@ -129,6 +128,7 @@ export default function Test() {
           <FlatList
             data={home_test.questions}
             horizontal
+            showsHorizontalScrollIndicator={false}
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item, index }) => {
               const ans = home_test.answers.find((i) => i.questionId === index);
@@ -238,7 +238,7 @@ const createStyles = (dark_mode: boolean) =>
     navigation_title: {
       fontSize: 24,
       fontWeight: "400",
-      color: COLOR.white,
+      color: dark_mode ? COLOR.white : COLOR.dark,
     },
     container_header_right: {
       flexDirection: "row",
@@ -276,7 +276,7 @@ const createStyles = (dark_mode: boolean) =>
       color: COLOR.white,
     },
     question_number_default_color: {
-      backgroundColor: COLOR.gray3,
+      backgroundColor: COLOR.gray,
     },
     question_number_red_color: {
       backgroundColor: COLOR.red,

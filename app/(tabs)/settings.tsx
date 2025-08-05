@@ -1,24 +1,24 @@
 import { createGlobalStyles } from "@/assets/styles/global.style";
 import {
   AllQuestionIcon,
-    ArrowSquareIcon,
-    EyeIcon,
-    FinesIcon,
-    InfoIcon,
-    InfoIcon2,
-    InstagramIcon,
-    LinkIcon,
-    MenuBoardIcon,
-    MoonIcon,
-    NavigationArrowLeftIcon,
-    PlayCircleIcon,
-    SafeSecuratyIcon,
-    Screen2Icon,
-    ScreenIcon,
-    SmartCarIcon,
-    StarIcon,
-    TelegramIcon,
-    TranslateIcon,
+  ArrowSquareIcon,
+  EyeIcon,
+  FinesIcon,
+  InfoIcon,
+  InfoIcon2,
+  InstagramIcon,
+  LinkIcon,
+  MenuBoardIcon,
+  MoonIcon,
+  NavigationArrowLeftIcon,
+  PlayCircleIcon,
+  SafeSecuratyIcon,
+  Screen2Icon,
+  ScreenIcon,
+  SmartCarIcon,
+  StarIcon,
+  TelegramIcon,
+  TranslateIcon,
 } from "@/assets/svgs/icon";
 import { COLOR } from "@/constants/color.constant";
 import { Languages } from "@/language";
@@ -30,13 +30,13 @@ import { useState } from "react";
 import {
   Alert,
   Linking,
-    Modal,
-    ScrollView,
-    StyleSheet,
-    Switch,
-    Text,
-    TouchableOpacity,
-    View,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useDispatch } from "react-redux";
 
@@ -54,17 +54,19 @@ export default function Settings() {
     dispatch(setTheme(!dark_mode));
   };
 
-  const global_styles = createGlobalStyles(dark_mode)
+  const global_styles = createGlobalStyles(dark_mode);
 
-  const handleOpen = async (url:string)=>{
-     const supported = await Linking.canOpenURL(url);
+  const handleOpen = async (url: string) => {
+    const supported = await Linking.canOpenURL(url);
 
     if (supported) {
       await Linking.openURL(url);
     } else {
       Alert.alert(`Don't know how to open this URL: ${url}`);
     }
-  }
+  };
+
+  const styles = createStyles(dark_mode);
 
   return (
     <View style={global_styles.container2}>
@@ -74,12 +76,9 @@ export default function Settings() {
             style={{ alignItems: "center", flexDirection: "row", gap: 6 }}
             onPress={() => navigation.goBack()}
           >
-            <NavigationArrowLeftIcon color="#fff" />
+            <NavigationArrowLeftIcon color={dark_mode ? COLOR.white : COLOR.dark_color} />
             <Text style={styles.navigation_title}>{MainLanguage["title"]}</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity>
-            <InfoIcon color="#B0B0B0" />
-          </TouchableOpacity> */}
         </View>
         <View style={{ ...styles.line, marginTop: 20 }}></View>
         <Text style={styles.section_title}>
@@ -236,12 +235,14 @@ export default function Settings() {
           </View>
         </View>
 
-
         <Text style={styles.section_title}>
           {MainLanguage["sections"]["contact"]}
         </Text>
         <View style={styles.section}>
-          <TouchableOpacity style={styles.section_child} onPress={()=>handleOpen("https://telegram.org/")}>
+          <TouchableOpacity
+            style={styles.section_child}
+            onPress={() => handleOpen("https://telegram.org/")}
+          >
             <View style={styles.section_child_left}>
               <View style={styles.section_child_icon}>
                 <TelegramIcon color={COLOR.green2} />
@@ -253,7 +254,10 @@ export default function Settings() {
           </TouchableOpacity>
 
           <View style={styles.line}></View>
-          <TouchableOpacity style={styles.section_child} onPress={()=>handleOpen("https://instagram.com")}>
+          <TouchableOpacity
+            style={styles.section_child}
+            onPress={() => handleOpen("https://instagram.com")}
+          >
             <View style={styles.section_child_left}>
               <View style={styles.section_child_icon}>
                 <InstagramIcon color={COLOR.green2} />
@@ -265,7 +269,14 @@ export default function Settings() {
           </TouchableOpacity>
 
           <View style={styles.line}></View>
-          <TouchableOpacity style={styles.section_child} onPress={()=>handleOpen("https://telegra.ph/Privacy-Policy-for-Prava-UZ--YHQ-2025-03-22")}>
+          <TouchableOpacity
+            style={styles.section_child}
+            onPress={() =>
+              handleOpen(
+                "https://telegra.ph/Privacy-Policy-for-Prava-UZ--YHQ-2025-03-22"
+              )
+            }
+          >
             <View style={styles.section_child_left}>
               <View style={styles.section_child_icon}>
                 <SafeSecuratyIcon color={COLOR.green2} />
@@ -277,7 +288,12 @@ export default function Settings() {
           </TouchableOpacity>
 
           <View style={styles.line}></View>
-          <TouchableOpacity style={styles.section_child} onPress={()=>handleOpen(`https://play.google.com/store/apps?hl=ru&pli=1`)}>
+          <TouchableOpacity
+            style={styles.section_child}
+            onPress={() =>
+              handleOpen(`https://play.google.com/store/apps?hl=ru&pli=1`)
+            }
+          >
             <View style={styles.section_child_left}>
               <View style={styles.section_child_icon}>
                 <StarIcon color={COLOR.green2} />
@@ -289,7 +305,12 @@ export default function Settings() {
           </TouchableOpacity>
 
           <View style={styles.line}></View>
-          <TouchableOpacity style={styles.section_child} onPress={()=>handleOpen(`https://play.google.com/store/apps?hl=ru&pli=1`)}>
+          <TouchableOpacity
+            style={styles.section_child}
+            onPress={() =>
+              handleOpen(`https://play.google.com/store/apps?hl=ru&pli=1`)
+            }
+          >
             <View style={styles.section_child_left}>
               <View style={styles.section_child_icon}>
                 <LinkIcon color={COLOR.green2} />
@@ -321,113 +342,112 @@ export default function Settings() {
   );
 }
 
-const styles = StyleSheet.create({
-  container_header: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexDirection: "row",
-    paddingLeft: 12,
-    paddingRight: 12,
-  },
-  navigation_title: {
-    fontSize: 24,
-    fontWeight: 400,
-    color: COLOR.white,
-  },
-  line: {
-    width: "100%",
-    height: 1,
-    backgroundColor: COLOR.white,
-  },
-  section_title: {
-    fontSize: 24,
-    fontWeight: 400,
-    color: COLOR.white,
-    marginLeft: 12,
-    marginRight: 12,
-    marginTop: 16,
-  },
-  section: {
-    width: "100%",
-    backgroundColor: COLOR.black1,
-    marginTop: 13,
-  },
-  section_child: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    flex: 1,
-    gap: 12,
-    paddingTop: 12,
-    paddingBottom: 12,
-    paddingLeft: 12,
-    paddingRight: 12,
-  },
-  section_child_left: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  section_child_text: {
-    fontSize: 14,
-    color: COLOR.white,
-    fontWeight: 400,
-  },
-  section_child_icon: {
-    width: 30,
-    height: 30,
-    backgroundColor: COLOR.green3,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 50,
-  },
-  version_cont: {
-    width: "100%",
-    height: 55,
-    backgroundColor: COLOR.black1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  version_text: {
-    fontSize: 14,
-    fontWeight: 400,
-    color: COLOR.white,
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: COLOR.white2,
-  },
-  modalContent: {
-    width: 300,
-    padding: 8,
-    backgroundColor: "white",
-    borderRadius: 10,
-  },
-  modalTitle: {
-    textAlign: "center",
-    fontSize: 20,
-  },
-  language_btn: {
-    width: "100%",
-    height: 40,
-    marginTop: 5,
-    justifyContent: "center",
-    padding: 5,
-    borderRadius: 7,
-  },
-  language_btn_text: {
-    color: COLOR.dark1,
-  },
-  selected_language: {
-    backgroundColor: COLOR.black1,
-  },
-  selected_language_text: {
-    color: COLOR.white,
-  },
-  default_language: {
-    backgroundColor: COLOR.white3,
-  },
-});
+const createStyles = (dark_mode: boolean) =>
+  StyleSheet.create({
+    container_header: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      flexDirection: "row",
+    },
+    navigation_title: {
+      fontSize: 24,
+      fontWeight: 400,
+      color: dark_mode ? COLOR.white : COLOR.dark_color,
+    },
+    line: {
+      width: "100%",
+      height: 1,
+      backgroundColor: dark_mode ? COLOR.white : COLOR.dark_color,
+    },
+    section_title: {
+      fontSize: 24,
+      fontWeight: 400,
+      color: dark_mode ? COLOR.white : COLOR.dark_color,
+      marginLeft: 12,
+      marginRight: 12,
+      marginTop: 16,
+    },
+    section: {
+      width: "100%",
+      backgroundColor: COLOR.black1,
+      marginTop: 13,
+    },
+    section_child: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      flex: 1,
+      gap: 12,
+      paddingTop: 12,
+      paddingBottom: 12,
+      paddingLeft: 12,
+      paddingRight: 12,
+    },
+    section_child_left: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+    },
+    section_child_text: {
+      fontSize: 14,
+      color: COLOR.white,
+      fontWeight: 400,
+    },
+    section_child_icon: {
+      width: 30,
+      height: 30,
+      backgroundColor: COLOR.green3,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 50,
+    },
+    version_cont: {
+      width: "100%",
+      height: 55,
+      backgroundColor: COLOR.black1,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    version_text: {
+      fontSize: 14,
+      fontWeight: 400,
+      color: COLOR.white,
+    },
+    modalBackground: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: COLOR.white2,
+    },
+    modalContent: {
+      width: 300,
+      padding: 8,
+      backgroundColor: "white",
+      borderRadius: 10,
+    },
+    modalTitle: {
+      textAlign: "center",
+      fontSize: 20,
+    },
+    language_btn: {
+      width: "100%",
+      height: 40,
+      marginTop: 5,
+      justifyContent: "center",
+      padding: 5,
+      borderRadius: 7,
+    },
+    language_btn_text: {
+      color: COLOR.dark1,
+    },
+    selected_language: {
+      backgroundColor: COLOR.black1,
+    },
+    selected_language_text: {
+      color: COLOR.white,
+    },
+    default_language: {
+      backgroundColor: COLOR.white3,
+    },
+  });
