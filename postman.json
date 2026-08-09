@@ -1,0 +1,597 @@
+{
+	"info": {
+		"_postman_id": "f87b574d-f16c-4d12-8c40-488b57174f3d",
+		"name": "Tezkor prava",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33421532"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"admin@gmail.com\",\n    \"password\":\"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/signup",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/user/profile",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":\"Sarodrbek\",\n    \"password\":\"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/user/update",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invited users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/user/invited_users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"invited_users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ticket",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "imgUrl",
+									"type": "file",
+									"src": "postman-cloud:///1ef7c29c-d480-4fd0-906d-47aa4c772e4e"
+								},
+								{
+									"key": "currentAnswer",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "questions[lotin]",
+									"value": "savol",
+									"type": "text"
+								},
+								{
+									"key": "questions[krill]",
+									"value": "savol",
+									"type": "text"
+								},
+								{
+									"key": "questions[rus]",
+									"value": "savol",
+									"type": "text"
+								},
+								{
+									"key": "answers[0][lotin]",
+									"value": "Ha",
+									"type": "text"
+								},
+								{
+									"key": "answers[0][rus]",
+									"value": "Ha",
+									"type": "text"
+								},
+								{
+									"key": "answers[0][krill]",
+									"value": "Ha",
+									"type": "text"
+								},
+								{
+									"key": "answers[1][lotin]",
+									"value": "Yoq",
+									"type": "text"
+								},
+								{
+									"key": "answers[1][rus]",
+									"value": "Yoq",
+									"type": "text"
+								},
+								{
+									"key": "answers[1][krill]",
+									"value": "Yoq",
+									"type": "text"
+								},
+								{
+									"key": "izoh[lotin]",
+									"value": "salom",
+									"type": "text"
+								},
+								{
+									"key": "izoh[rus]",
+									"value": "salom",
+									"type": "text"
+								},
+								{
+									"key": "izoh[krill]",
+									"value": "salom",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/ticket/create",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"ticket",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findAll",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/ticket/findall",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"ticket",
+								"findall"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/ticket/find/687727bed3bf55dbe7b21356",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"ticket",
+								"find",
+								"687727bed3bf55dbe7b21356"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "imgUrl",
+									"type": "file",
+									"src": "postman-cloud:///1ef7c28f-10e5-4880-8424-0b8f2c1395f0"
+								},
+								{
+									"key": "currentAnswer",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "questions[rus]",
+									"value": "savol",
+									"type": "text"
+								},
+								{
+									"key": "questions[lotin]",
+									"value": "savol",
+									"type": "text"
+								},
+								{
+									"key": "questions[lotin]",
+									"value": "savol",
+									"type": "text"
+								},
+								{
+									"key": "answers[0][lotin]",
+									"value": "ha",
+									"type": "text"
+								},
+								{
+									"key": "answers[0][rus]",
+									"value": "ha",
+									"type": "text"
+								},
+								{
+									"key": "answers[0][krill]",
+									"value": "ha",
+									"type": "text"
+								},
+								{
+									"key": "answers[1][lotin]",
+									"value": "yoq",
+									"type": "text"
+								},
+								{
+									"key": "answers[1][rus]",
+									"value": "yoq",
+									"type": "text"
+								},
+								{
+									"key": "answers[1][krill]",
+									"value": "yoq",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/ticket/update/687799f6683691ec9bfaf85a",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"ticket",
+								"update",
+								"687799f6683691ec9bfaf85a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/ticket/delete/687727bed3bf55dbe7b21356",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"ticket",
+								"delete",
+								"687727bed3bf55dbe7b21356"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "invited user",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"toUser\": \"587671424221359\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/invited_user/create",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"invited_user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accept the invite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/invited_user/accept/87253127728750",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"invited_user",
+								"accept",
+								"87253127728750"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "disaccept the invite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/invited_user/disaccept/87253127728750",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"invited_user",
+								"disaccept",
+								"87253127728750"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:9000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4N2JhNmRkNTFiM2YyOGM0OGQ2NDc2NiIsImlhdCI6MTc1MjkzNDEyOSwiZXhwIjoxNzU1NjEyNTI5fQ.eLF981cUX4aY3KwJ3fYLwlBe-ivsuIldNblo9LtyfJU",
+			"type": "string"
+		}
+	]
+}
