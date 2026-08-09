@@ -1,6 +1,16 @@
 import TicketModel from "./ticket.model.js";
+import UserModel from "../user/user.model.js";
 
 const GROUP_SIZE = 20;
+
+// Public list/browse endpoints must not leak the answer key — only the
+// admin panel (which reuses these same endpoints to render its edit
+// forms) is allowed to see correct_answer up front.
+async function isAdminRequester(req) {
+  if (!req.user?.id) return false;
+  const user = await UserModel.findById(req.user.id).select("role");
+  return user?.role === "admin";
+}
 
 const CreateTikcet = async (req, res) => {
   try {
@@ -38,7 +48,10 @@ const getTickets = async (req, res) => {
   try {
     const topic = req.query.topic;
     const filter = topic ? { topic } : {};
-    const tickets = await TicketModel.find(filter).sort({ id: 1 });
+    const hideAnswer = !(await isAdminRequester(req));
+    const tickets = await TicketModel.find(filter)
+      .select(hideAnswer ? "-correct_answer" : "")
+      .sort({ id: 1 });
 
     return res
       .status(200)
@@ -73,7 +86,9 @@ const getTicketGroup = async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid group id" });
     }
 
+    const hideAnswer = !(await isAdminRequester(req));
     const tickets = await TicketModel.find({})
+      .select(hideAnswer ? "-correct_answer" : "")
       .sort({ id: 1 })
       .skip((groupId - 1) * GROUP_SIZE)
       .limit(GROUP_SIZE);
@@ -91,7 +106,10 @@ const getTicketGroup = async (req, res) => {
 const getRandomTickets = async (req, res) => {
   try {
     const count = Math.min(100, Math.max(1, Number(req.query.count) || 20));
-    const tickets = await TicketModel.aggregate([{ $sample: { size: count } }]);
+    const hideAnswer = !(await isAdminRequester(req));
+    const pipeline = [{ $sample: { size: count } }];
+    if (hideAnswer) pipeline.push({ $unset: "correct_answer" });
+    const tickets = await TicketModel.aggregate(pipeline);
 
     return res.status(200).json({ success: true, tickets });
   } catch (error) {
@@ -125,13 +143,16 @@ const searchTickets = async (req, res) => {
     const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(escaped, "i");
 
+    const hideAnswer = !(await isAdminRequester(req));
     const tickets = await TicketModel.find({
       $or: [
         { "questions.lotin": regex },
         { "questions.krill": regex },
         { "questions.rus": regex },
       ],
-    }).limit(30);
+    })
+      .select(hideAnswer ? "-correct_answer" : "")
+      .limit(30);
 
     return res.status(200).json({ success: true, tickets });
   } catch (error) {
@@ -141,9 +162,10 @@ const searchTickets = async (req, res) => {
 
 const getTicketById = async (req, res) => {
   try {
+    const hideAnswer = !(await isAdminRequester(req));
     const ticket = await TicketModel.findOne({
       id: req.params.id,
-    });
+    }).select(hideAnswer ? "-correct_answer" : "");
 
     if (!ticket) {
       return res
@@ -154,6 +176,25 @@ const getTicketById = async (req, res) => {
     return res
       .status(200)
       .json({ success: true, message: "ticket found", ticket });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Server-side answer verification — the client never receives
+// correct_answer up front for the endpoints above, so it asks here once
+// the user has actually picked an option.
+const checkAnswer = async (req, res) => {
+  try {
+    const ticket = await TicketModel.findOne({ id: Number(req.params.id) }).select("correct_answer");
+    if (!ticket) {
+      return res.status(404).json({ success: false, message: "Savol topilmadi" });
+    }
+
+    const selectedIndex = Number(req.body.selectedIndex);
+    const correct = ticket.correct_answer === selectedIndex;
+
+    return res.status(200).json({ success: true, correct, correct_answer: ticket.correct_answer });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -239,4 +280,5 @@ export {
   getRandomTickets,
   searchTickets,
   reportTicket,
+  checkAnswer,
 };

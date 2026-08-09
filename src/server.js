@@ -17,12 +17,17 @@ import LeaderboardRouter from "./modules/leaderboard/leaderboard.route.js";
 import ProRouter from "./modules/pro/pro.route.js";
 import CommentRouter from "./modules/comment/comment.route.js";
 import TtsRouter from "./modules/tts/tts.route.js";
+import { apiLimiter } from "./middlewares/rateLimiter.middleware.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 dotenv.config();
 
 const app = express();
+
+// Server sits behind nginx — trust its X-Forwarded-For so the rate
+// limiter (and req.ip generally) sees the real client IP, not nginx's.
+app.set("trust proxy", 1);
 
 app.use(express.json());
 app.use(
@@ -31,6 +36,8 @@ app.use(
   })
 );
 app.use("/images", express.static(path.join(__dirname, "./uploads")));
+
+app.use("/api", apiLimiter);
 
 app.use("/api/auth", AuthRouter);
 app.use("/api/user", UserRouter);
