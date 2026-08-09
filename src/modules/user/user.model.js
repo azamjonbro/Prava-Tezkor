@@ -13,6 +13,7 @@ const UserSchema = new Schema(
     isBot: { type: Boolean, default: false },
     telegramId: { type: String, unique: true, sparse: true },
     firstName: { type: String },
+    phone: { type: String, default: null },
     proExpiresAt: { type: Date, default: null },
     invitedUsers: [
       {
