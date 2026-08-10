@@ -133,6 +133,31 @@ const reportTicket = async (req, res) => {
   }
 };
 
+const getReportedTickets = async (req, res) => {
+  try {
+    const tickets = await TicketModel.find({ reportCount: { $gt: 0 } }).sort({ reportCount: -1 });
+    return res.status(200).json({ success: true, tickets });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const dismissReport = async (req, res) => {
+  try {
+    const ticket = await TicketModel.findOneAndUpdate(
+      { id: Number(req.params.id) },
+      { reportCount: 0 },
+      { new: true }
+    );
+    if (!ticket) {
+      return res.status(404).json({ success: false, message: "Savol topilmadi" });
+    }
+    return res.status(200).json({ success: true, ticket });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 const searchTickets = async (req, res) => {
   try {
     const q = (req.query.q || "").trim();
@@ -281,4 +306,6 @@ export {
   searchTickets,
   reportTicket,
   checkAnswer,
+  getReportedTickets,
+  dismissReport,
 };

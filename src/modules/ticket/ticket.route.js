@@ -4,7 +4,9 @@ import {
   CreateTikcet,
   checkAnswer,
   deleteTicketById,
+  dismissReport,
   getRandomTickets,
+  getReportedTickets,
   getTicketById,
   getTicketGroup,
   getTickets,
@@ -35,6 +37,8 @@ TicketRouter.get("/group/:groupId", authMiddleware, ticketReadLimiter, getTicket
 TicketRouter.get("/find/:id", authMiddleware, ticketReadLimiter, getTicketById);
 TicketRouter.post("/:id/report", authMiddleware, reportTicket);
 TicketRouter.post("/:id/check", authMiddleware, checkAnswer);
+TicketRouter.get("/reported", authMiddleware, IsAdminMiddlware, getReportedTickets);
+TicketRouter.put("/:id/dismiss-report", authMiddleware, IsAdminMiddlware, dismissReport);
 
 TicketRouter.put(
   "/update/:id",
